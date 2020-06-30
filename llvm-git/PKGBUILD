@@ -116,8 +116,8 @@ build() {
         -D CMAKE_POLICY_DEFAULT_CMP0075=NEW \
         -D LLVM_ENABLE_PROJECTS="polly;lldb;lld;compiler-rt;clang-tools-extra;clang"
 
-    samu -j4 -v all ocaml_doc
-    DESTDIR="${srcdir}/fakeinstall_64" samu install
+    ninja all ocaml_doc
+    DESTDIR="${srcdir}/fakeinstall_64" ninja install
 
     cd ../_build32
     export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
@@ -148,7 +148,7 @@ build() {
         -DLLVM_BINUTILS_INCDIR=/usr/include \
         -DLLVM_APPEND_VC_REV=ON
 
-    ninja $NINJAFLAGS all
+    ninja all
     DESTDIR="${srcdir}/fakeinstall_32" ninja install
 }
 
