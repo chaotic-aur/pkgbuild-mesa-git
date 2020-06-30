@@ -152,7 +152,7 @@ build() {
     DESTDIR="$srcdir/fakeinstall_32" ninja install
 }
 
-_fakeinstal_64() {   
+_fakeinstall_64() {   
         local src f dir   
         for src; do     
         f="${src#fakeinstall_64/}"     
