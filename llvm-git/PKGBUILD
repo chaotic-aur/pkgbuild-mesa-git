@@ -82,7 +82,7 @@ prepare() {
     # llvm-project contains a lot of stuff, remove parts that aren't used by this package
     rm -rf debuginfo-tests libclc libcxx libcxxabi libunwind llgo openmp parallel-libs pstl libc
      
-    rm -rf "${srcdir}"/fakeinstall*
+    rm -rf "$srcdir"/fakeinstall*
 }
 
 build() {
@@ -91,16 +91,16 @@ build() {
 
     cd _build64
     cmake "$srcdir"/llvm-project/llvm  -G Ninja \
-        -D CMAKE_C_FLAGS="${CFLAGS}" \
-        -D CMAKE_CXX_FLAGS="${CXXFLAGS}" \
+        -D CMAKE_C_FLAGS="$CFLAGS" \
+        -D CMAKE_CXX_FLAGS="$CXXFLAGS" \
         -D CMAKE_BUILD_TYPE=Release \
         -D CMAKE_INSTALL_PREFIX=/usr \
         -D PYTHON_EXECUTABLE=/usr/bin/python \
         -D LLVM_APPEND_VC_REV=ON \
-        -D LLVM_HOST_TRIPLE=$CHOST \
+        -D LLVM_HOST_TRIPLE="$CHOST" \
         -D LLVM_ENABLE_RTTI=ON \
         -D LLVM_ENABLE_FFI=ON \
-        -D FFI_INCLUDE_DIR=$(pkg-config --cflas-only-I libffi | cut -c3-) \
+        -D FFI_INCLUDE_DIR="$(pkg-config --cflas-only-I libffi | cut -c3-)" \
         -D LLVM_BUILD_LLVM_DYLIB=ON \
         -D LLVM_LINK_LLVM_DYLIB=ON \
         -D LLVM_INSTALL_UTILS=ON \
@@ -117,7 +117,7 @@ build() {
         -D LLVM_ENABLE_PROJECTS="polly;lldb;lld;compiler-rt;clang-tools-extra;clang"
 
     ninja all ocaml_doc
-    DESTDIR="${srcdir}/fakeinstall_64" ninja install
+    DESTDIR="$srcdir/fakeinstall_64" ninja install
 
     cd ../_build32
     export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
@@ -133,7 +133,7 @@ build() {
         -D CMAKE_C_FLAGS="$LIB32_CFLAGS" \
         -D CMAKE_CXX_FLAGS="$LIB32_CXXFLAGS" \
         -DLLVM_TARGET_ARCH:STRING=i686 \
-        -DLLVM_HOST_TRIPLE=$CHOST \
+        -DLLVM_HOST_TRIPLE="$CHOST" \
         -DLLVM_DEFAULT_TARGET_TRIPLE="i686-pc-linux-gnu" \
         -DLLVM_BUILD_LLVM_DYLIB=ON \
         -DLLVM_LINK_LLVM_DYLIB=ON \
@@ -144,32 +144,21 @@ build() {
         -DLLVM_BUILD_DOCS=OFF \
         -DLLVM_ENABLE_SPHINX=OFF \
         -DLLVM_ENABLE_DOXYGEN=OFF \
-        -DFFI_INCLUDE_DIR=$(pkg-config --variable=includedir libffi) \
+        -DFFI_INCLUDE_DIR="$(pkg-config --variable=includedir libffi)" \
         -DLLVM_BINUTILS_INCDIR=/usr/include \
         -DLLVM_APPEND_VC_REV=ON
 
     ninja all
-    DESTDIR="${srcdir}/fakeinstall_32" ninja install
-}
-
-check() {
-    cd _build64
-      ninja $NINJAFLAGS check
-      ninja $NINJAFLAGS check-polly
-      ninja $NINJAFLAGS check-lld
-      # check-lldb causes ninja to hang at 99%, disabled those tests for now
-      #ninja $NINJAFLAGS check-lldb
-      ninja $NINJAFLAGS check-clang
-      ninja $NINJAFLAGS check-clang-tools
+    DESTDIR="$srcdir/fakeinstall_32" ninja install
 }
 
 _fakeinstal_64() {   
         local src f dir   
         for src; do     
         f="${src#fakeinstall_64/}"     
-        dir="${pkgdir}/${f%/*}"    
-        install -m755 -d "${dir}"     
-        mv -v "${src}" "${dir}/"   
+        dir="$pkgdir/${f%/*}"    
+        install -m755 -d "$dir"     
+        mv -v "$src" "$dir/"   
        done
 }
 
@@ -177,9 +166,9 @@ _fakeinstall_32() {
          local src f dir   
          for src; do     
          f="${src#fakeinstall_32/}"     
-         dir="${pkgdir}/${f%/*}"     
-         install -m755 -d "${dir}"     
-         mv -v "${src}" "${dir}/"   
+         dir="$pkgdir/${f%/*}"     
+         install -m755 -d "$dir"     
+         mv -v "$src" "$dir/"   
        done 
 }
 
@@ -187,12 +176,12 @@ package_lldb-git() {
      pkgdesc="Next generation, high-performance debugger (git version)"   
      url="https://lldb.llvm.org/"   
      depends=("clang-git=$pkgver-$pkgrel" "llvm-libs-git=$pkgver-$pkgrel")   
-     provides=('lldb')   
+     provides=("lldb=$pkgver")   
      conflicts=('lldb')     
      _fakeinstall_64 fakeinstall_64/usr/bin/lldb*   
      _fakeinstall_64 fakeinstall_64/usr/include/lldb   
      _fakeinstall_64 fakeinstall_64/usr/lib/liblldb*   
-     _fakeinstall_64 fakeinstall_64/usr/lib/python${_pythonver}/site-packages/lldb   
+     _fakeinstall_64 fakeinstall_64/usr/lib/python"$_pythonver"/site-packages/lldb   
     # Install possibly outdated man page; better than nothing! -- doesn't exist anymore ????   
     # install -Dm644 "$srcdir"/llvm-project-git/lldb/docs/lldb.1 "$pkgdir/usr/share/man/man1/lldb.1"    
     install -Dm644 "$srcdir"/llvm-project-git/llvm/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE" 
@@ -210,18 +199,18 @@ package_compiler-rt-git() {
   pkgdesc="Compiler runtime libraries for clang (git version)"   
   url="https://compiler-rt.llvm.org/"   
   depends=("llvm-git=$pkgver-$pkgrel" 'gcc-libs')   
-  provides=('compiler-rt')   
+  provides=("compiler-rt=$pkgver")   
   conflicts=('clang-svn')
      
    local _llvmver=$(awk -F 'MAJOR |MINOR |PATCH |)' \     
      'BEGIN { ORS="." ; i=0 } \     
       /set\(LLVM_VERSION_/ { print $2 ; i++ ; if (i==2) ORS="" } \     
       END { print "\n" }' \     
-      ${srcdir}/llvm-project-git/llvm/CMakeLists.txt)   
+      "$srcdir"/llvm-project-git/llvm/CMakeLists.txt)   
    
-  _fakeinstall_64 fakeinstall/usr/lib/clang/${_llvmver}/lib/linux   
-  _fakeinstall_64 fakeinstall/usr/lib/clang/${_llvmver}/include/{sanitizer,xray}   
-  _fakeinstall_64 fakeinstall/usr/lib/clang/${_llvmver}/share     
+  _fakeinstall_64 fakeinstall/usr/lib/clang/"$_llvmver"/lib/linux   
+  _fakeinstall_64 fakeinstall/usr/lib/clang/"$_llvmver"/include/{sanitizer,xray}   
+  _fakeinstall_64 fakeinstall/usr/lib/clang/"$_llvmver"/share     
   
   install -Dm644 "$srcdir"/llvm-project-git/llvm/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE" 
 }
@@ -231,7 +220,7 @@ package_clang-git() {
      url="http://clang.llvm.org/"   
      depends=("llvm-git=$pkgver-$pkgrel" 'gcc')   
      optdepends=('llvm-libs: for compiling with -flto')   
-     provides=('clang' 'clang-analyzer' 'clang-tools-extra') 
+     provides=("clang=$pkgver" 'clang-analyzer' 'clang-tools-extra') 
      conflicts=('clang' 'clang-svn' 'clang-analyzer' 'clang-tools-extra' 'clang-tools-extra-svn')   
      replaces=('clang-svn' 'clang-analyzer-svn' 'clang-tools-extra-svn')
      
@@ -261,10 +250,10 @@ package_clang-git() {
     rmdir "$pkgdir/usr/libexec"   
     sed -i 's|libexec|lib/clang|' "$pkgdir/usr/bin/scan-build"   
     # Install Python bindings   
-    for _py in 2.7 ${_pythonver}; do     
+    for _py in 2.7 "$_pythonver"; do     
         install -d "$pkgdir/usr/lib/python$_py/site-packages"     
         cp -a "$srcdir"/llvm-project-git/clang/bindings/python/clang "$pkgdir/usr/lib/python$_py/site-packages/"     
-        _python${_py%%.*}_optimize "$pkgdir/usr/lib/python$_py"   
+        _python"${_py%%.*}"_optimize "$pkgdir/usr/lib/python$_py"   
     done   
     
     # Fix shebang in Python 2 script   
@@ -281,7 +270,7 @@ package_clang-git() {
 package_llvm-libs-git() {   
     pkgdesc="LLVM runtime libraries (git version)"   
     depends=('gcc-libs' 'zlib' 'libffi' 'libedit' 'libxml2' 'ncurses')   
-    provides=('llvm-libs')   
+    provides=("llvm-libs=$pkgver")   
     replaces=('llvm-libs-svn')   
     conflicts=('llvm-libs-svn')   
     
@@ -294,7 +283,7 @@ package_llvm-libs-git() {
 package_llvm-ocaml-git() {   
      pkgdesc="OCaml bindings for LLVM (git version)"   
      depends=("llvm-git=$pkgver-$pkgrel" "ocaml=$_ocaml_ver" 'ocaml-ctypes')   
-     provides=('llvm-ocaml')   
+     provides=("llvm-ocaml=$pkgver")   
      replaces=('llvm-ocaml-svn')   
      conflicts=('llvm-ocaml' 'llvm-ocaml-svn')   
 
@@ -307,9 +296,9 @@ package_llvm-ocaml-git() {
 
 package_llvm-git() {
   pkgdesc="Collection of modular and reusable compiler and toolchain technologies (git version)"
-  depends=("llvm-libs-git=${pkgver}" 'perl')
+  depends=("llvm-libs-git=$pkgver" 'perl')
   optdepends=('python-setuptools: for using lit (LLVM Integrated Tester)')
-  provides=('llvm')
+  provides=("llvm=$pkgver")
   replaces=('llvm-svn')
   conflicts=('llvm' 'llvm-svn')
 
@@ -337,7 +326,7 @@ package_llvm-git() {
 package_lib32-llvm-libs-git() {
   pkgdesc='Low Level Virtual Machine library (runtime library)(32-bit)(git version)'
   depends=('lib32-libffi' 'lib32-zlib' 'lib32-libxml2' 'lib32-gcc-libs')
-  provides=('lib32-llvm-libs')
+  provides=("lib32-llvm-libs=$pkgver")
   replaces=('lib32-llvm-libs-svn')
   conflicts=('lib32-llvm-libs-svn')
 
@@ -349,7 +338,7 @@ package_lib32-llvm-libs-git() {
 
 package_lib32-llvm-git() {
   pkgdesc='Low Level Virtual Machine (32-bit)(git version)'
-  depends=("lib32-llvm-libs-git=${pkgver}" 'llvm-git')
+  depends=("lib32-llvm-libs-git=$pkgver" 'llvm-git')
   provides=('lib32-llvm')
   replaces=('lib32-llvm-svn' 'llvm-svn')
   conflicts=('lib32-llvm' 'lib32-llvm-svn')
