@@ -210,7 +210,7 @@ package_compiler-rt-git() {
      'BEGIN { ORS="." ; i=0 } \     
       /set\(LLVM_VERSION_/ { print $2 ; i++ ; if (i==2) ORS="" } \     
       END { print "\n" }' \     
-      "$srcdir"/llvm-project/llvm/CMakeLists.txt)   
+      "$srcdir/llvm-project/llvm/CMakeLists.txt")   
    
   _fakeinstall_64 fakeinstall_64/usr/lib/clang/"$_llvmver"/lib/linux   
   _fakeinstall_64 fakeinstall_64/usr/lib/clang/"$_llvmver"/include/{sanitizer,xray}   
