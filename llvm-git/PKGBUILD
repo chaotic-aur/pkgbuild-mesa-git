@@ -194,7 +194,7 @@ package_polly-git() {
     pkgdesc="Polly is a high-level loop and data-locality optimizer and optimization infrastructure for LLVM"
     url="https://polly.llvm.org/"
     depends=("llvm-git=$pkgver-$pkgrel")
-    _fakeinstal_64 fakeinstall_64/usr/include/polly
+    _fakeinstall_64 fakeinstall_64/usr/include/polly
 }
 
 package_compiler-rt-git() {   
