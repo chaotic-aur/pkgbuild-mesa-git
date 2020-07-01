@@ -24,7 +24,7 @@
 pkgbase=llvm-git
 pkgname=('lldb-git' 'polly-git' 'compiler-rt-git' 'clang-git' 'llvm-ocaml-git' 'llvm-libs-git' 'llvm-git' 'lib32-llvm-git' 'lib32-llvm-libs-git')
 pkgdesc='Low Level Virtual Machine (git version)'
-pkgver=11.0.0_r358946.679d101e7cb
+pkgver=11.0.0_r358949.5f56da3763a
 pkgrel=1
 _ocaml_ver=4.09.1 
 _pythonver=3.8
@@ -40,7 +40,7 @@ source=("llvm-project::git+https://github.com/llvm/llvm-project.git")
 
 md5sums=('SKIP')
 sha512sums=('SKIP')
-options=('staticlibs' 'ccache')
+options=('staticlibs')
 
 # NINJAFLAGS is an env var used to pass commandline options to ninja
 # NOTE: It's your responbility to validate the value of $NINJAFLAGS. If unsure, don't set it.
@@ -118,7 +118,7 @@ build() {
         -D CMAKE_POLICY_DEFAULT_CMP0075=NEW \
         -D LLVM_ENABLE_PROJECTS="polly;lldb;lld;compiler-rt;clang-tools-extra;clang"
 
-    ninja all ocaml_doc
+    ninja -j4 all ocaml_doc
     DESTDIR="$srcdir/fakeinstall_64" ninja install
 
     cd ../_build32
@@ -150,7 +150,7 @@ build() {
         -DLLVM_BINUTILS_INCDIR=/usr/include \
         -DLLVM_APPEND_VC_REV=ON
 
-    ninja all
+    ninja -j4 all
     DESTDIR="$srcdir/fakeinstall_32" ninja install
 }
 
