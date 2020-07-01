@@ -1,3 +1,5 @@
+#!/usr/bin/bash
+
 # Based on AUR's llvm-git:
 # Based on LordHeavy's LLVM
 # Maintainer: Solomon Choina <shlomochoina@gmail.com>
@@ -22,7 +24,7 @@
 pkgbase=llvm-git
 pkgname=('lldb-git' 'polly-git' 'compiler-rt-git' 'clang-git' 'llvm-ocaml-git' 'llvm-libs-git' 'llvm-git' 'lib32-llvm-git' 'lib32-llvm-libs-git')
 pkgdesc='Low Level Virtual Machine (git version)'
-pkgver=11.0.0_r358845.502773d7434
+pkgver=11.0.0_r358946.679d101e7cb
 pkgrel=1
 _ocaml_ver=4.09.1 
 _pythonver=3.8
@@ -152,7 +154,7 @@ build() {
     DESTDIR="$srcdir/fakeinstall_32" ninja install
 }
 
-_fakeinstall_64() {   
+_fakeinstall_64 () {   
         local src f dir   
         for src; do     
         f="${src#fakeinstall_64/}"     
@@ -162,7 +164,7 @@ _fakeinstall_64() {
        done
 }
 
-_fakeinstall_32() {   
+_fakeinstall_32 () {   
          local src f dir   
          for src; do     
          f="${src#fakeinstall_32/}"     
@@ -184,7 +186,7 @@ package_lldb-git() {
      _fakeinstall_64 fakeinstall_64/usr/lib/python"$_pythonver"/site-packages/lldb   
     # Install possibly outdated man page; better than nothing! -- doesn't exist anymore ????   
     # install -Dm644 "$srcdir"/llvm-project-git/lldb/docs/lldb.1 "$pkgdir/usr/share/man/man1/lldb.1"    
-    install -Dm644 "$srcdir"/llvm-project-git/llvm/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE" 
+    install -Dm644 "$srcdir"/llvm-project/lldb/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE" 
 
 } 
 
@@ -212,7 +214,7 @@ package_compiler-rt-git() {
   _fakeinstall_64 fakeinstall/usr/lib/clang/"$_llvmver"/include/{sanitizer,xray}   
   _fakeinstall_64 fakeinstall/usr/lib/clang/"$_llvmver"/share     
   
-  install -Dm644 "$srcdir"/llvm-project-git/llvm/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE" 
+  install -Dm644 "$srcdir"/llvm-project/clang/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE" 
 }
 
 package_clang-git() {   
@@ -264,7 +266,7 @@ package_clang-git() {
     _python2_optimize "$pkgdir/usr/share/clang"   
     _python3_optimize "$pkgdir/usr/share" -x 'clang-include-fixer|run-find-all-symbols'   
 
-    install -Dm644 "$srcdir"/llvm-project-git/llvm/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE" 
+    install -Dm644 "$srcdir"/llvm-project/llvm/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE" 
 }
 
 package_llvm-libs-git() {   
@@ -277,7 +279,7 @@ package_llvm-libs-git() {
     _fakeinstall_64 fakeinstall/usr/lib/libLLVM-*.so   
     _fakeinstall_64 fakeinstall/usr/lib/libRemarks.so.*     
     
-    install -Dm644 "$srcdir"/llvm-project-git/llvm/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE" 
+    install -Dm644 "$srcdir"/llvm-project/llvm/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE" 
 } 
 
 package_llvm-ocaml-git() {   
@@ -290,7 +292,7 @@ package_llvm-ocaml-git() {
      _fakeinstall_64 fakeinstall/usr/lib/ocaml   
      _fakeinstall_64 fakeinstall/usr/share/doc/llvm/ocaml-html   
 
-    install -Dm644 "$srcdir"/llvm-project-git/llvm/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE" 
+    install -Dm644 "$srcdir"/llvm-project/llvm/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE" 
  
 }
 
@@ -320,7 +322,7 @@ package_llvm-git() {
   # make sure there are no files left to install
   find fakeinstall_64 -depth -print0 | xargs -0 rmdir
 
-  install -Dm644 "$srcdir"/llvm-project-git/llvm/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  install -Dm644 "$srcdir"/llvm-project/llvm/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 
 package_lib32-llvm-libs-git() {
@@ -333,7 +335,7 @@ package_lib32-llvm-libs-git() {
   _fakeinstall_32 fakeinstall/usr/lib32/libLLVM-*.so
   _fakeinstall_32 fakeinstall/usr/lib32/libRemarks.so.*
 
-  install -Dm644 "$srcdir"/llvm-project-git/llvm/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  install -Dm644 "$srcdir"/llvm-project/llvm/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 
 package_lib32-llvm-git() {
@@ -356,6 +358,6 @@ package_lib32-llvm-git() {
   # make sure there are no files left to install
   find fakeinstall_32 -depth -print0 | xargs -0 rm -r
 
-  install -Dm644 "$srcdir"/llvm-project-git/llvm/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  install -Dm644 "$srcdir"/llvm-project/llvm/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 
