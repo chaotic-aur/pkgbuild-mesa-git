@@ -118,7 +118,7 @@ build() {
         -D CMAKE_POLICY_DEFAULT_CMP0075=NEW \
         -D LLVM_ENABLE_PROJECTS="polly;lldb;lld;compiler-rt;clang-tools-extra;clang"
 
-    ninja all ocaml_doc
+    ninja -j4 all ocaml_doc
     DESTDIR="$srcdir/fakeinstall_64" ninja install
 
     cd ../_build32
@@ -150,7 +150,7 @@ build() {
         -DLLVM_BINUTILS_INCDIR=/usr/include \
         -DLLVM_APPEND_VC_REV=ON
 
-    ninja all
+    ninja -j4 all
     DESTDIR="$srcdir/fakeinstall_32" ninja install
 }
 
@@ -206,7 +206,7 @@ package_compiler-rt-git() {
   provides=("compiler-rt=$pkgver")   
   conflicts=('clang-svn')
      
-   local _llvmver=$(fakeinstall_64/usr/bin/llvm-config --version)   
+   local _llvmver=$($srcdir/fakeinstall_64/usr/bin/llvm-config --version)   
    
   _fakeinstall_64 fakeinstall_64/usr/lib/clang/"$_llvmver"/lib/linux   
   _fakeinstall_64 fakeinstall_64/usr/lib/clang/"$_llvmver"/include/{sanitizer,xray}   
