@@ -210,9 +210,9 @@ package_compiler-rt-git() {
       END { print "\n" }' \     
       "$srcdir"/llvm-project/llvm/CMakeLists.txt)   
    
-  _fakeinstall_64 fakeinstall/usr/lib/clang/"$_llvmver"/lib/linux   
-  _fakeinstall_64 fakeinstall/usr/lib/clang/"$_llvmver"/include/{sanitizer,xray}   
-  _fakeinstall_64 fakeinstall/usr/lib/clang/"$_llvmver"/share     
+  _fakeinstall_64 fakeinstall_64/usr/lib/clang/"$_llvmver"/lib/linux   
+  _fakeinstall_64 fakeinstall_64/usr/lib/clang/"$_llvmver"/include/{sanitizer,xray}   
+  _fakeinstall_64 fakeinstall_64/usr/lib/clang/"$_llvmver"/share     
   
   install -Dm644 "$srcdir"/llvm-project/clang/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE" 
 }
@@ -226,23 +226,23 @@ package_clang-git() {
      conflicts=('clang' 'clang-svn' 'clang-analyzer' 'clang-tools-extra' 'clang-tools-extra-svn')   
      replaces=('clang-svn' 'clang-analyzer-svn' 'clang-tools-extra-svn')
      
-    _fakeinstall_64 fakeinstall/usr/bin/*clang*   
-    _fakeinstall_64 fakeinstall/usr/bin/{c-index-test,diagtool,find-all-symbols}   
-    _fakeinstall_64 fakeinstall/usr/bin/{hmaptool,modularize,scan-build,scan-view}     
+    _fakeinstall_64 fakeinstall_64/usr/bin/*clang*   
+    _fakeinstall_64 fakeinstall_64/usr/bin/{c-index-test,diagtool,find-all-symbols}   
+    _fakeinstall_64 fakeinstall_64/usr/bin/{hmaptool,modularize,scan-build,scan-view}     
 
-    _fakeinstall_64 fakeinstall/usr/include/clang*
+    _fakeinstall_64 fakeinstall_64/usr/include/clang*
      
-    _fakeinstall_64 fakeinstall/usr/lib/clang   
-    _fakeinstall_64 fakeinstall/usr/lib/libclang*   
-    _fakeinstall_64 fakeinstall/usr/lib/libfindAllSymbols*   
-    _fakeinstall_64 fakeinstall/usr/lib/cmake/clang     
+    _fakeinstall_64 fakeinstall_64/usr/lib/clang   
+    _fakeinstall_64 fakeinstall_64/usr/lib/libclang*   
+    _fakeinstall_64 fakeinstall_64/usr/lib/libfindAllSymbols*   
+    _fakeinstall_64 fakeinstall_64/usr/lib/cmake/clang     
 
-    _fakeinstall_64 fakeinstall/usr/libexec    
+    _fakeinstall_64 fakeinstall_64/usr/libexec    
 
-    _fakeinstall_64 fakeinstall/usr/share/clang   
-    _fakeinstall_64 fakeinstall/usr/share/doc/clang*   
-    _fakeinstall_64 fakeinstall/usr/share/scan{-build,-view}   
-    _fakeinstall_64 fakeinstall/usr/share/man/man1/{clang,diagtool,extraclangtools,scan-build}*   
+    _fakeinstall_64 fakeinstall_64/usr/share/clang   
+    _fakeinstall_64 fakeinstall_64/usr/share/doc/clang*   
+    _fakeinstall_64 fakeinstall_64/usr/share/scan{-build,-view}   
+    _fakeinstall_64 fakeinstall_64/usr/share/man/man1/{clang,diagtool,extraclangtools,scan-build}*   
 
     # Remove documentation sources   
     rm -rf "$pkgdir"/usr/share/doc/clang{,-tools}/html/{_sources,.buildinfo}   
@@ -276,8 +276,8 @@ package_llvm-libs-git() {
     replaces=('llvm-libs-svn')   
     conflicts=('llvm-libs-svn')   
     
-    _fakeinstall_64 fakeinstall/usr/lib/libLLVM-*.so   
-    _fakeinstall_64 fakeinstall/usr/lib/libRemarks.so.*     
+    _fakeinstall_64 fakeinstall_64/usr/lib/libLLVM-*.so   
+    _fakeinstall_64 fakeinstall_64/usr/lib/libRemarks.so.*     
     
     install -Dm644 "$srcdir"/llvm-project/llvm/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE" 
 } 
@@ -289,8 +289,8 @@ package_llvm-ocaml-git() {
      replaces=('llvm-ocaml-svn')   
      conflicts=('llvm-ocaml' 'llvm-ocaml-svn')   
 
-     _fakeinstall_64 fakeinstall/usr/lib/ocaml   
-     _fakeinstall_64 fakeinstall/usr/share/doc/llvm/ocaml-html   
+     _fakeinstall_64 fakeinstall_64/usr/lib/ocaml   
+     _fakeinstall_64 fakeinstall_64/usr/share/doc/llvm/ocaml-html   
 
     install -Dm644 "$srcdir"/llvm-project/llvm/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE" 
  
@@ -304,10 +304,10 @@ package_llvm-git() {
   replaces=('llvm-svn')
   conflicts=('llvm' 'llvm-svn')
 
-  _fakeinstall_64 fakeinstall/usr/bin
-  _fakeinstall_64 fakeinstall/usr/include/llvm*
-  _fakeinstall_64 fakeinstall/usr/lib
-  _fakeinstall_64 fakeinstall/usr/share
+  _fakeinstall_64 fakeinstall_64/usr/bin
+  _fakeinstall_64 fakeinstall_64/usr/include/llvm*
+  _fakeinstall_64 fakeinstall_64/usr/lib
+  _fakeinstall_64 fakeinstall_64/usr/share
 
   # Include lit for running lit-based tests in other projects
   pushd "$srcdir"/llvm-project/llvm/utils/lit
@@ -332,8 +332,8 @@ package_lib32-llvm-libs-git() {
   replaces=('lib32-llvm-libs-svn')
   conflicts=('lib32-llvm-libs-svn')
 
-  _fakeinstall_32 fakeinstall/usr/lib32/libLLVM-*.so
-  _fakeinstall_32 fakeinstall/usr/lib32/libRemarks.so.*
+  _fakeinstall_32 fakeinstall_32/usr/lib32/libLLVM-*.so
+  _fakeinstall_32 fakeinstall_32/usr/lib32/libRemarks.so.*
 
   install -Dm644 "$srcdir"/llvm-project/llvm/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
@@ -345,11 +345,11 @@ package_lib32-llvm-git() {
   replaces=('lib32-llvm-svn' 'llvm-svn')
   conflicts=('lib32-llvm' 'lib32-llvm-svn')
 
-  _fakeinstall_32 fakeinstall/usr/lib32
+  _fakeinstall_32 fakeinstall_32/usr/lib32
   # Remove libs which conflict with llvm-libs
   rm -f "$pkgdir"/usr/lib32/{libLLVM,libLTO,LLVMgold,libRemarks}.so
 
-  _fakeinstall_32 fakeinstall/usr/bin/llvm-config
+  _fakeinstall_32 fakeinstall_32/usr/bin/llvm-config
   mv -v "$pkgdir"/usr/bin/llvm-config "$pkgdir"/usr/lib32/llvm-config
 
   rm -rf "$pkgdir"/usr/{bin/*,include,share/{doc,man,llvm,opt-viewer}}
