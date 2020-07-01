@@ -24,7 +24,7 @@
 pkgbase=llvm-git
 pkgname=('lldb-git' 'polly-git' 'compiler-rt-git' 'clang-git' 'llvm-ocaml-git' 'llvm-libs-git' 'llvm-git' 'lib32-llvm-git' 'lib32-llvm-libs-git')
 pkgdesc='Low Level Virtual Machine (git version)'
-pkgver=11.0.0_r359031.c83ec0a6335
+pkgver=11.0.0_r359060.51e92b223bf
 pkgrel=1
 _ocaml_ver=4.09.1 
 _pythonver=3.8
@@ -196,7 +196,7 @@ package_polly-git() {
     depends=("llvm-git=$pkgver-$pkgrel")
     _fakeinstall_64 fakeinstall_64/usr/include/polly
     
-    install -Dm644 "$srcdir"/llvm-project/polly/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+    install -Dm644 "$srcdir"/llvm-project/polly/LICENSE.txt "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 
 package_compiler-rt-git() {   
