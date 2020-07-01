@@ -195,6 +195,8 @@ package_polly-git() {
     url="https://polly.llvm.org/"
     depends=("llvm-git=$pkgver-$pkgrel")
     _fakeinstall_64 fakeinstall_64/usr/include/polly
+    
+    install -Dm644 "$srcdir"/llvm-project/polly/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 
 package_compiler-rt-git() {   
