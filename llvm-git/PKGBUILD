@@ -208,7 +208,7 @@ package_compiler-rt-git() {
      'BEGIN { ORS="." ; i=0 } \     
       /set\(LLVM_VERSION_/ { print $2 ; i++ ; if (i==2) ORS="" } \     
       END { print "\n" }' \     
-      "$srcdir"/llvm-project-git/llvm/CMakeLists.txt)   
+      "$srcdir"/llvm-project/llvm/CMakeLists.txt)   
    
   _fakeinstall_64 fakeinstall/usr/lib/clang/"$_llvmver"/lib/linux   
   _fakeinstall_64 fakeinstall/usr/lib/clang/"$_llvmver"/include/{sanitizer,xray}   
@@ -254,7 +254,7 @@ package_clang-git() {
     # Install Python bindings   
     for _py in 2.7 "$_pythonver"; do     
         install -d "$pkgdir/usr/lib/python$_py/site-packages"     
-        cp -a "$srcdir"/llvm-project-git/clang/bindings/python/clang "$pkgdir/usr/lib/python$_py/site-packages/"     
+        cp -a "$srcdir"/llvm-project/clang/bindings/python/clang "$pkgdir/usr/lib/python$_py/site-packages/"     
         _python"${_py%%.*}"_optimize "$pkgdir/usr/lib/python$_py"   
     done   
     
@@ -310,7 +310,7 @@ package_llvm-git() {
   _fakeinstall_64 fakeinstall/usr/share
 
   # Include lit for running lit-based tests in other projects
-  pushd "$srcdir"/llvm-project-git/llvm/utils/lit
+  pushd "$srcdir"/llvm-project/llvm/utils/lit
   python3 setup.py install --root="$pkgdir" -O1
   popd
  
