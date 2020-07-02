@@ -24,9 +24,9 @@
 pkgbase=llvm-git
 pkgname=('lldb-git' 'polly-git' 'compiler-rt-git' 'clang-git' 'llvm-ocaml-git' 'llvm-libs-git' 'llvm-git' 'lib32-llvm-git' 'lib32-llvm-libs-git')
 pkgdesc='Low Level Virtual Machine (git version)'
-pkgver=11.0.0_r359060.51e92b223bf
+pkgver=11.0.0_r359082.9fc877213e0
 pkgrel=1
-_ocaml_ver=4.09.1 
+_ocaml_ver=4.09.1
 _pythonver=3.8
 groups=('chaotic-mesa-git')
 arch=('x86_64')
@@ -55,7 +55,7 @@ _python3_optimize() {
   python -O -m compileall "$@"
   python -OO -m compileall "$@"
 }
-    
+
 pkgver() {
     cd llvm-project/llvm
 
@@ -79,11 +79,11 @@ prepare() {
     fi
     mkdir _build64
     mkdir _build32
-    
+
     cd llvm-project
     # llvm-project contains a lot of stuff, remove parts that aren't used by this package
     rm -rf debuginfo-tests libclc libcxx libcxxabi libunwind llgo openmp parallel-libs pstl libc
-     
+
     rm -rf "$srcdir"/fakeinstall*
 }
 
@@ -118,12 +118,12 @@ build() {
         -D CMAKE_POLICY_DEFAULT_CMP0075=NEW \
         -D LLVM_ENABLE_PROJECTS="polly;lldb;lld;compiler-rt;clang-tools-extra;clang"
 
-    ninja -j4 all ocaml_doc
+    ninja  all ocaml_doc
     DESTDIR="$srcdir/fakeinstall_64" ninja install
 
     cd ../_build32
     export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
-    
+
     LIB32_CFLAGS="$CFLAGS"" -m32"
     LIB32_CXXFLAGS="$CXXFLAGS"" -m32"
 
@@ -150,148 +150,148 @@ build() {
         -DLLVM_BINUTILS_INCDIR=/usr/include \
         -DLLVM_APPEND_VC_REV=ON
 
-    ninja -j4 all
+    ninja all
     DESTDIR="$srcdir/fakeinstall_32" ninja install
 }
 
-_fakeinstall_64 () {   
-        local src f dir   
-        for src; do     
-        f="${src#fakeinstall_64/}"     
-        dir="$pkgdir/${f%/*}"    
-        install -m755 -d "$dir"     
-        mv -v "$src" "$dir/"   
+_fakeinstall_64 () {
+        local src f dir
+        for src; do
+        f="${src#fakeinstall_64/}"
+        dir="$pkgdir/${f%/*}"
+        install -m755 -d "$dir"
+        mv -v "$src" "$dir/"
        done
 }
 
-_fakeinstall_32 () {   
-         local src f dir   
-         for src; do     
-         f="${src#fakeinstall_32/}"     
-         dir="$pkgdir/${f%/*}"     
-         install -m755 -d "$dir"     
-         mv -v "$src" "$dir/"   
-       done 
+_fakeinstall_32 () {
+         local src f dir
+         for src; do
+         f="${src#fakeinstall_32/}"
+         dir="$pkgdir/${f%/*}"
+         install -m755 -d "$dir"
+         mv -v "$src" "$dir/"
+       done
 }
 
-package_lldb-git() {   
-     pkgdesc="Next generation, high-performance debugger (git version)"   
-     url="https://lldb.llvm.org/"   
-     depends=("clang-git=$pkgver-$pkgrel" "llvm-libs-git=$pkgver-$pkgrel")   
-     provides=("lldb=$pkgver")   
-     conflicts=('lldb')     
-     _fakeinstall_64 fakeinstall_64/usr/bin/lldb*   
-     _fakeinstall_64 fakeinstall_64/usr/include/lldb   
-     _fakeinstall_64 fakeinstall_64/usr/lib/liblldb*   
-     _fakeinstall_64 fakeinstall_64/usr/lib/python"$_pythonver"/site-packages/lldb   
-    # Install possibly outdated man page; better than nothing! -- doesn't exist anymore ????   
-    # install -Dm644 "$srcdir"/llvm-project-git/lldb/docs/lldb.1 "$pkgdir/usr/share/man/man1/lldb.1"    
-    install -Dm644 "$srcdir"/llvm-project/lldb/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE" 
+package_lldb-git() {
+     pkgdesc="Next generation, high-performance debugger (git version)"
+     url="https://lldb.llvm.org/"
+     depends=("clang-git=$pkgver-$pkgrel" "llvm-libs-git=$pkgver-$pkgrel")
+     provides=("lldb=$pkgver")
+     conflicts=('lldb')
+     _fakeinstall_64 fakeinstall_64/usr/bin/lldb*
+     _fakeinstall_64 fakeinstall_64/usr/include/lldb
+     _fakeinstall_64 fakeinstall_64/usr/lib/liblldb*
+     _fakeinstall_64 fakeinstall_64/usr/lib/python"$_pythonver"/site-packages/lldb
+    # Install possibly outdated man page; better than nothing! -- doesn't exist anymore ????
+    # install -Dm644 "$srcdir"/llvm-project-git/lldb/docs/lldb.1 "$pkgdir/usr/share/man/man1/lldb.1"
+    install -Dm644 "$srcdir"/llvm-project/lldb/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 
-} 
+}
 
 package_polly-git() {
     pkgdesc="Polly is a high-level loop and data-locality optimizer and optimization infrastructure for LLVM"
     url="https://polly.llvm.org/"
     depends=("llvm-git=$pkgver-$pkgrel")
     _fakeinstall_64 fakeinstall_64/usr/include/polly
-    
+
     install -Dm644 "$srcdir"/llvm-project/polly/LICENSE.txt "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 
-package_compiler-rt-git() {   
-  pkgdesc="Compiler runtime libraries for clang (git version)"   
-  url="https://compiler-rt.llvm.org/"   
-  depends=("llvm-git=$pkgver-$pkgrel" 'gcc-libs')   
-  provides=("compiler-rt=$pkgver")   
+package_compiler-rt-git() {
+  pkgdesc="Compiler runtime libraries for clang (git version)"
+  url="https://compiler-rt.llvm.org/"
+  depends=("llvm-git=$pkgver-$pkgrel" 'gcc-libs')
+  provides=("compiler-rt=$pkgver")
   conflicts=('clang-svn')
-     
-   local _llvmver=$(echo $pkgver | grep -Po "(^[\.\d]+)")   
-   
-  _fakeinstall_64 fakeinstall_64/usr/lib/clang/"$_llvmver"/lib/linux   
-  _fakeinstall_64 fakeinstall_64/usr/lib/clang/"$_llvmver"/include/{sanitizer,xray}   
-  _fakeinstall_64 fakeinstall_64/usr/lib/clang/"$_llvmver"/share     
-  
-  install -Dm644 "$srcdir"/llvm-project/clang/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE" 
+
+   local _llvmver=$(echo $pkgver | grep -Po "(^[\.\d]+)")
+
+  _fakeinstall_64 fakeinstall_64/usr/lib/clang/"$_llvmver"/lib/linux
+  _fakeinstall_64 fakeinstall_64/usr/lib/clang/"$_llvmver"/include/{sanitizer,xray}
+  _fakeinstall_64 fakeinstall_64/usr/lib/clang/"$_llvmver"/share
+
+  install -Dm644 "$srcdir"/llvm-project/clang/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 
-package_clang-git() {   
-     pkgdesc="C language family frontend for LLVM (git version)"   
-     url="http://clang.llvm.org/"   
-     depends=("llvm-git=$pkgver-$pkgrel" 'gcc')   
-     optdepends=('llvm-libs: for compiling with -flto')   
-     provides=("clang=$pkgver" 'clang-analyzer' 'clang-tools-extra') 
-     conflicts=('clang' 'clang-svn' 'clang-analyzer' 'clang-tools-extra' 'clang-tools-extra-svn')   
+package_clang-git() {
+     pkgdesc="C language family frontend for LLVM (git version)"
+     url="http://clang.llvm.org/"
+     depends=("llvm-git=$pkgver-$pkgrel" 'gcc')
+     optdepends=('llvm-libs: for compiling with -flto')
+     provides=("clang=$pkgver" 'clang-analyzer' 'clang-tools-extra')
+     conflicts=('clang' 'clang-svn' 'clang-analyzer' 'clang-tools-extra' 'clang-tools-extra-svn')
      replaces=('clang-svn' 'clang-analyzer-svn' 'clang-tools-extra-svn')
-     
-    _fakeinstall_64 fakeinstall_64/usr/bin/*clang*   
-    _fakeinstall_64 fakeinstall_64/usr/bin/{c-index-test,diagtool,find-all-symbols}   
-    _fakeinstall_64 fakeinstall_64/usr/bin/{hmaptool,modularize,scan-build,scan-view}     
+
+    _fakeinstall_64 fakeinstall_64/usr/bin/*clang*
+    _fakeinstall_64 fakeinstall_64/usr/bin/{c-index-test,diagtool,find-all-symbols}
+    _fakeinstall_64 fakeinstall_64/usr/bin/{hmaptool,modularize,scan-build,scan-view}
 
     _fakeinstall_64 fakeinstall_64/usr/include/clang*
-     
-    _fakeinstall_64 fakeinstall_64/usr/lib/clang   
-    _fakeinstall_64 fakeinstall_64/usr/lib/libclang*   
-    _fakeinstall_64 fakeinstall_64/usr/lib/libfindAllSymbols*   
-    _fakeinstall_64 fakeinstall_64/usr/lib/cmake/clang     
 
-    _fakeinstall_64 fakeinstall_64/usr/libexec    
+    _fakeinstall_64 fakeinstall_64/usr/lib/clang
+    _fakeinstall_64 fakeinstall_64/usr/lib/libclang*
+    _fakeinstall_64 fakeinstall_64/usr/lib/libfindAllSymbols*
+    _fakeinstall_64 fakeinstall_64/usr/lib/cmake/clang
 
-    _fakeinstall_64 fakeinstall_64/usr/share/clang   
-    _fakeinstall_64 fakeinstall_64/usr/share/doc/clang*   
-    _fakeinstall_64 fakeinstall_64/usr/share/scan{-build,-view}   
-    _fakeinstall_64 fakeinstall_64/usr/share/man/man1/{clang,diagtool,extraclangtools,scan-build}*   
+    _fakeinstall_64 fakeinstall_64/usr/libexec
 
-    # Remove documentation sources   
-    rm -rf "$pkgdir"/usr/share/doc/clang{,-tools}/html/{_sources,.buildinfo}   
-    
-    # Move analyzer scripts out of /usr/libexec   
-    mv "$pkgdir"/usr/libexec/{ccc,c++}-analyzer "$pkgdir/usr/lib/clang/"   
-    rmdir "$pkgdir/usr/libexec"   
-    sed -i 's|libexec|lib/clang|' "$pkgdir/usr/bin/scan-build"   
-    # Install Python bindings   
-    for _py in 2.7 "$_pythonver"; do     
-        install -d "$pkgdir/usr/lib/python$_py/site-packages"     
-        cp -a "$srcdir"/llvm-project/clang/bindings/python/clang "$pkgdir/usr/lib/python$_py/site-packages/"     
-        _python"${_py%%.*}"_optimize "$pkgdir/usr/lib/python$_py"   
-    done   
-    
-    # Fix shebang in Python 2 script   
-    sed -i '1s|/usr/bin/env python$|&2|' \     
-        "$pkgdir"/usr/share/clang/run-find-all-symbols.py   
-    
-   # Compile Python scripts   
-    _python2_optimize "$pkgdir/usr/share/clang"   
-    _python3_optimize "$pkgdir/usr/share" -x 'clang-include-fixer|run-find-all-symbols'   
+    _fakeinstall_64 fakeinstall_64/usr/share/clang
+    _fakeinstall_64 fakeinstall_64/usr/share/doc/clang*
+    _fakeinstall_64 fakeinstall_64/usr/share/scan{-build,-view}
+    _fakeinstall_64 fakeinstall_64/usr/share/man/man1/{clang,diagtool,extraclangtools,scan-build}*
 
-    install -Dm644 "$srcdir"/llvm-project/llvm/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE" 
+    # Remove documentation sources
+    rm -rf "$pkgdir"/usr/share/doc/clang{,-tools}/html/{_sources,.buildinfo}
+
+    # Move analyzer scripts out of /usr/libexec
+    mv "$pkgdir"/usr/libexec/{ccc,c++}-analyzer "$pkgdir/usr/lib/clang/"
+    rmdir "$pkgdir/usr/libexec"
+    sed -i 's|libexec|lib/clang|' "$pkgdir/usr/bin/scan-build"
+    # Install Python bindings
+    for _py in 2.7 "$_pythonver"; do
+        install -d "$pkgdir/usr/lib/python$_py/site-packages"
+        cp -a "$srcdir"/llvm-project/clang/bindings/python/clang "$pkgdir/usr/lib/python$_py/site-packages/"
+        _python"${_py%%.*}"_optimize "$pkgdir/usr/lib/python$_py"
+    done
+
+    # Fix shebang in Python 2 script
+    sed -i '1s|/usr/bin/env python$|&2|' \
+        "$pkgdir"/usr/share/clang/run-find-all-symbols.py
+
+   # Compile Python scripts
+    _python2_optimize "$pkgdir/usr/share/clang"
+    _python3_optimize "$pkgdir/usr/share" -x 'clang-include-fixer|run-find-all-symbols'
+
+    install -Dm644 "$srcdir"/llvm-project/llvm/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 
-package_llvm-libs-git() {   
-    pkgdesc="LLVM runtime libraries (git version)"   
-    depends=('gcc-libs' 'zlib' 'libffi' 'libedit' 'libxml2' 'ncurses')   
-    provides=("llvm-libs=$pkgver")   
-    replaces=('llvm-libs-svn')   
-    conflicts=('llvm-libs-svn')   
-    
-    _fakeinstall_64 fakeinstall_64/usr/lib/libLLVM-*.so   
-    _fakeinstall_64 fakeinstall_64/usr/lib/libRemarks.so.*     
-    
-    install -Dm644 "$srcdir"/llvm-project/llvm/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE" 
-} 
+package_llvm-libs-git() {
+    pkgdesc="LLVM runtime libraries (git version)"
+    depends=('gcc-libs' 'zlib' 'libffi' 'libedit' 'libxml2' 'ncurses')
+    provides=("llvm-libs=$pkgver")
+    replaces=('llvm-libs-svn')
+    conflicts=('llvm-libs-svn')
 
-package_llvm-ocaml-git() {   
-     pkgdesc="OCaml bindings for LLVM (git version)"   
-     depends=("llvm-git=$pkgver-$pkgrel" "ocaml=$_ocaml_ver" 'ocaml-ctypes')   
-     provides=("llvm-ocaml=$pkgver")   
-     replaces=('llvm-ocaml-svn')   
-     conflicts=('llvm-ocaml' 'llvm-ocaml-svn')   
+    _fakeinstall_64 fakeinstall_64/usr/lib/libLLVM-*.so
+    _fakeinstall_64 fakeinstall_64/usr/lib/libRemarks.so.*
 
-     _fakeinstall_64 fakeinstall_64/usr/lib/ocaml   
-     _fakeinstall_64 fakeinstall_64/usr/share/doc/llvm/ocaml-html   
+    install -Dm644 "$srcdir"/llvm-project/llvm/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
 
-    install -Dm644 "$srcdir"/llvm-project/llvm/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE" 
- 
+package_llvm-ocaml-git() {
+     pkgdesc="OCaml bindings for LLVM (git version)"
+     depends=("llvm-git=$pkgver-$pkgrel" "ocaml=$_ocaml_ver" 'ocaml-ctypes')
+     provides=("llvm-ocaml=$pkgver")
+     replaces=('llvm-ocaml-svn')
+     conflicts=('llvm-ocaml' 'llvm-ocaml-svn')
+
+     _fakeinstall_64 fakeinstall_64/usr/lib/ocaml
+     _fakeinstall_64 fakeinstall_64/usr/share/doc/llvm/ocaml-html
+
+    install -Dm644 "$srcdir"/llvm-project/llvm/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+
 }
 
 package_llvm-git() {
@@ -311,12 +311,12 @@ package_llvm-git() {
   pushd "$srcdir"/llvm-project/llvm/utils/lit
   python3 setup.py install --root="$pkgdir" -O1
   popd
- 
+
   # Remove documentation sources
   rm -rf "$pkgdir"/usr/share/doc/llvm/html/{_sources,.buildinfo}
   # Remove libs which conflict with llvm-libs
   rm -f "$pkgdir"/usr/lib/{libLLVM,libLTO,LLVMgold,libRemarks}.so
-  
+
   # make sure there are no files left to install
   find fakeinstall_64 -depth -print0 | xargs -0 rmdir
 
@@ -352,7 +352,7 @@ package_lib32-llvm-git() {
 
   rm -rf "$pkgdir"/usr/{bin/*,include,share/{doc,man,llvm,opt-viewer}}
   mv -v "$pkgdir"/usr/lib32/llvm-config "$pkgdir"/usr/bin/llvm-config32
-  
+
   # make sure there are no files left to install
   find fakeinstall_32 -depth -print0 | xargs -0 rm -r
 
