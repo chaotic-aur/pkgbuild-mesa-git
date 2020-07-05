@@ -25,6 +25,7 @@ pkgbase = llvm-git
 	makedepends = lib32-libffi
 	makedepends = lib32-libxml2
 	makedepends = lib32-zlib
+	makedepends = python2
 	options = staticlibs
 	source = llvm-project::git+https://github.com/llvm/llvm-project.git
 	md5sums = SKIP
