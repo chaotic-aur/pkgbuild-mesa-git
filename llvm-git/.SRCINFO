@@ -1,6 +1,6 @@
 pkgbase = llvm-git
 	pkgdesc = Low Level Virtual Machine (git version)
-	pkgver = 11.0.0_r359187.bc110de78a4
+	pkgver = 11.0.0_r359340.2247f7218a3
 	pkgrel = 1
 	url = https://llvm.org/
 	arch = x86_64
@@ -33,38 +33,38 @@ pkgbase = llvm-git
 pkgname = lldb-git
 	pkgdesc = Next generation, high-performance debugger (git version)
 	url = https://lldb.llvm.org/
-	depends = clang-git=11.0.0_r359187.bc110de78a4-1
-	depends = llvm-libs-git=11.0.0_r359187.bc110de78a4-1
-	provides = lldb=11.0.0_r359187.bc110de78a4
+	depends = clang-git=11.0.0_r359340.2247f7218a3-1
+	depends = llvm-libs-git=11.0.0_r359340.2247f7218a3-1
+	provides = lldb=11.0.0_r359340.2247f7218a3
 	conflicts = lldb
 
 pkgname = lld-git
 	pkgdesc = Linker from the LLVM project
 	url = https://lld.llvm.org
-	depends = llvm-libs-git=11.0.0_r359187.bc110de78a4-1
-	provides = lld=11.0.0_r359187.bc110de78a4
+	depends = llvm-libs-git=11.0.0_r359340.2247f7218a3-1
+	provides = lld=11.0.0_r359340.2247f7218a3
 	conflicts = lld
 
 pkgname = polly-git
 	pkgdesc = Polly is a high-level loop and data-locality optimizer and optimization infrastructure for LLVM
 	url = https://polly.llvm.org/
-	depends = llvm-git=11.0.0_r359187.bc110de78a4-1
+	depends = llvm-git=11.0.0_r359340.2247f7218a3-1
 
 pkgname = compiler-rt-git
 	pkgdesc = Compiler runtime libraries for clang (git version)
 	url = https://compiler-rt.llvm.org/
-	depends = llvm-git=11.0.0_r359187.bc110de78a4-1
+	depends = llvm-git=11.0.0_r359340.2247f7218a3-1
 	depends = gcc-libs
-	provides = compiler-rt=11.0.0_r359187.bc110de78a4
+	provides = compiler-rt=11.0.0_r359340.2247f7218a3
 	conflicts = clang-svn
 
 pkgname = clang-git
 	pkgdesc = C language family frontend for LLVM (git version)
 	url = http://clang.llvm.org/
-	depends = llvm-git=11.0.0_r359187.bc110de78a4-1
+	depends = llvm-git=11.0.0_r359340.2247f7218a3-1
 	depends = gcc
 	optdepends = llvm-libs: for compiling with -flto
-	provides = clang=11.0.0_r359187.bc110de78a4
+	provides = clang=11.0.0_r359340.2247f7218a3
 	provides = clang-analyzer
 	provides = clang-tools-extra
 	conflicts = clang
@@ -78,10 +78,10 @@ pkgname = clang-git
 
 pkgname = llvm-ocaml-git
 	pkgdesc = OCaml bindings for LLVM (git version)
-	depends = llvm-git=11.0.0_r359187.bc110de78a4-1
-	depends = ocaml=4.09.1
+	depends = llvm-git=11.0.0_r359340.2247f7218a3-1
+	depends = ocaml=4.10.0
 	depends = ocaml-ctypes
-	provides = llvm-ocaml=11.0.0_r359187.bc110de78a4
+	provides = llvm-ocaml=11.0.0_r359340.2247f7218a3
 	conflicts = llvm-ocaml
 	conflicts = llvm-ocaml-svn
 	replaces = llvm-ocaml-svn
@@ -94,28 +94,18 @@ pkgname = llvm-libs-git
 	depends = libedit
 	depends = libxml2
 	depends = ncurses
-	provides = llvm-libs=11.0.0_r359187.bc110de78a4
+	provides = llvm-libs=11.0.0_r359340.2247f7218a3
 	conflicts = llvm-libs-svn
 	replaces = llvm-libs-svn
 
 pkgname = llvm-git
 	pkgdesc = Collection of modular and reusable compiler and toolchain technologies (git version)
-	depends = llvm-libs-git=11.0.0_r359187.bc110de78a4
+	depends = llvm-libs-git=11.0.0_r359340.2247f7218a3
 	depends = perl
 	optdepends = python-setuptools: for using lit (LLVM Integrated Tester)
-	provides = llvm=11.0.0_r359187.bc110de78a4
+	provides = llvm=11.0.0_r359340.2247f7218a3
 	conflicts = llvm
 	conflicts = llvm-svn
-	replaces = llvm-svn
-
-pkgname = lib32-llvm-git
-	pkgdesc = Low Level Virtual Machine (32-bit)(git version)
-	depends = lib32-llvm-libs-git=11.0.0_r359187.bc110de78a4
-	depends = llvm-git
-	provides = lib32-llvm
-	conflicts = lib32-llvm
-	conflicts = lib32-llvm-svn
-	replaces = lib32-llvm-svn
 	replaces = llvm-svn
 
 pkgname = lib32-llvm-libs-git
@@ -124,7 +114,17 @@ pkgname = lib32-llvm-libs-git
 	depends = lib32-zlib
 	depends = lib32-libxml2
 	depends = lib32-gcc-libs
-	provides = lib32-llvm-libs=11.0.0_r359187.bc110de78a4
+	provides = lib32-llvm-libs=11.0.0_r359340.2247f7218a3
 	conflicts = lib32-llvm-libs-svn
 	replaces = lib32-llvm-libs-svn
+
+pkgname = lib32-llvm-git
+	pkgdesc = Low Level Virtual Machine (32-bit)(git version)
+	depends = lib32-llvm-libs-git=11.0.0_r359340.2247f7218a3
+	depends = llvm-git
+	provides = lib32-llvm
+	conflicts = lib32-llvm
+	conflicts = lib32-llvm-svn
+	replaces = lib32-llvm-svn
+	replaces = llvm-svn
 
