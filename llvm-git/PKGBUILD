@@ -191,6 +191,7 @@ package_lldb-git() {
      pkgdesc="Next generation, high-performance debugger (git version)"
      url="https://lldb.llvm.org/"
      depends=("clang-git=$pkgver-$pkgrel" "llvm-libs-git=$pkgver-$pkgrel")
+     optdepends=('llvm-git: for the man file')
      provides=("lldb=$pkgver")
      conflicts=('lldb')
      _fakeinstall_64 fakeinstall_64/usr/bin/lldb*
@@ -219,6 +220,7 @@ package_lld-git(){
 package_polly-git() {
     pkgdesc="Polly is a high-level loop and data-locality optimizer and optimization infrastructure for LLVM"
     url="https://polly.llvm.org/"
+    arch=('any')
     depends=("llvm-git=$pkgver-$pkgrel")
     _fakeinstall_64 fakeinstall_64/usr/include/polly
     _fakeinstall_64 fakeinstall_64/usr/lib/cmake/polly/
