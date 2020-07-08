@@ -224,7 +224,6 @@ package_polly-git() {
     depends=("llvm-git=$pkgver-$pkgrel")
     _fakeinstall_64 fakeinstall_64/usr/include/polly
     _fakeinstall_64 fakeinstall_64/usr/lib/cmake/polly/
-    _fakeinstall_64 fakeinstall_64/usr/share/man/man1/polly.1.gz
     install -Dm644 "$srcdir"/llvm-project/polly/LICENSE.txt "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 
