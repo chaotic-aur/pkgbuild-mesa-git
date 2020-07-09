@@ -1,5 +1,5 @@
 pkgbase=mesa-git
-pkgname=('vulkan-mesa-layers-git' 'opencl-mesa-git' 'vulkan-intel-git' 'vulkan-radeon-git' 'mesa-git')
+pkgname=('vulkan-mesa-layers-git' 'opencl-mesa-git' 'vulkan-intel-git' 'vulkan-radeon-git' 'mesa-git' 'lib32-vulkan-mesa-layers-git' 'lib32-vulkan-intel-git' 'lib32-vulkan-radeon-git' 'lib32-mesa-git')
 pkgdesc="mesa trunk monolithic (git version)"
 epoch=1
 pkgver=20.2.0_devel.125920.9418c8ec8dd
