@@ -6,8 +6,10 @@ pkgver=20.2.0_devel.125909.c8d848b2782
 pkgrel=1
 groups=('chaotic-mesa-git')
 arch=('x86_64')
+
+LLVM_VERSION=$(pacman -Qi llvm-libs-git | yay -Si llvm-libs-git | grep -Po '^Version +: ([^-]+)' | awk '{print $3}')
 makedepends=('python-mako' 'libxml2' 'libx11' 'libdrm' 'xorgproto' 'libxrandr'
-	           'libxshmfence' 'libxxf86vm' 'libxdamage' 'libvdpau' 'libva' 'wayland' 'wayland-protocols' 'elfutils' 'llvm-git' 'systemd'
+	           'libxshmfence' 'libxxf86vm' 'libxdamage' 'libvdpau' 'libva' 'wayland' 'wayland-protocols' 'elfutils' "llvm-git" 'systemd'
 	           'libomxil-bellagio' 'libglvnd' 'libunwind' 'lm_sensors' 'meson' 'libclc-git' 'clang-git' 'glslang' 'valgrind' 'zstd'
 	           'vulkan-icd-loader' 'git' 'python-mako' 'lib32-libxml2' 'lib32-expat' 'lib32-libx11' 'lib32-libdrm' 'xorgproto'
              'lib32-libxrandr' 'lib32-libxshmfence' 'lib32-libxxf86vm' 'lib32-libxdamage' 'gcc-multilib' 'lib32-libelf' 'lib32-llvm-git'
@@ -213,7 +215,7 @@ package_vulkan-radeon-git() {
 package_mesa-git() {
   pkgdesc="an open-source implementation of the OpenGL specification (git version)"
   depends=('libdrm' 'wayland' 'libxxf86vm' 'libxdamage' 'libxshmfence' 'libsystemd' 'libelf'
-           'libomxil-bellagio' 'libunwind' 'llvm-libs-git' 'lm_sensors' 'libglvnd')
+           'libomxil-bellagio' 'libunwind' "llvm-libs-git=$LLVM_VERSION" 'lm_sensors' 'libglvnd')
   optdepends=('opengl-man-pages: for the OpenGL API man pages')
   provides=('mesa' 'mesa-vdpau' 'libva-mesa-driver' 'mesa-libgl' 'opengl-driver')
   conflicts=('mesa' 'mesa-vdpau' 'libva-mesa-driver' 'mesa-libgl')
