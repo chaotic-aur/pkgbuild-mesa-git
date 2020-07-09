@@ -7,9 +7,9 @@ pkgrel=1
 groups=('chaotic-mesa-git')
 arch=('x86_64')
 
-LLVM_VERSION=$(pacman -Si llvm-libs-git | yay -Si llvm-libs-git | grep -Po '^Version +: ([^-]+)' | awk '{print $3}')
+LLVM_VERSION=$(pacman -Si llvm-libs-git | grep -Po '^Version +: ([^-]+)' | awk '{print $3}')
 
-LLVM32_VERSION=$(pacman -Si lib32-llvm-libs-git | yay -Si lib32-llvm-libs-git | grep -Po '^Version +: ([^-]+)' | awk '{print $3}')
+LLVM32_VERSION=$(pacman -Si lib32-llvm-libs-git | grep -Po '^Version +: ([^-]+)' | awk '{print $3}')
 makedepends=('python-mako' 'libxml2' 'libx11' 'libdrm' 'xorgproto' 'libxrandr'
 	           'libxshmfence' 'libxxf86vm' 'libxdamage' 'libvdpau' 'libva' 'wayland' 'wayland-protocols' 'elfutils' "llvm-git" 'systemd'
 	           'libomxil-bellagio' 'libglvnd' 'libunwind' 'lm_sensors' 'meson' 'libclc-git' 'clang-git' 'glslang' 'valgrind' 'zstd'
