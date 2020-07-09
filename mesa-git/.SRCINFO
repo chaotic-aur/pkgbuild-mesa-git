@@ -137,3 +137,59 @@ pkgname = mesa-git
 	conflicts = libva-mesa-driver
 	conflicts = mesa-libgl
 
+pkgname = lib32-vulkan-mesa-layers-git
+	pkgdesc = Mesa's Vulkan overlay layers (32-bit) (git version)
+	depends = vulkan-mesa-layers-git
+	conflicts = lib32-vulkan-mesa-layer-git
+	replaces = lib32-vulkan-mesa-layer-git
+
+pkgname = lib32-vulkan-intel-git
+	pkgdesc = Intel's Vulkan mesa driver (32-bit) (git version)
+	depends = vulkan-intel-git
+	depends = lib32-gcc-libs
+	depends = lib32-libgcrypt
+	depends = lib32-wayland
+	depends = lib32-libx11
+	depends = lib32-libxshmfence
+	optdepends = lib32-vulkan-mesa-layer-git: a vulkan layer to display information using an overlay
+	provides = lib32-vulkan-intel
+	provides = lib32-vulkan-driver
+	conflicts = lib32-vulkan-intel
+
+pkgname = lib32-vulkan-radeon-git
+	pkgdesc = Radeon's Vulkan mesa driver (32-bit) (git version)
+	depends = vulkan-radeon-git
+	depends = lib32-libgcrypt
+	depends = lib32-wayland
+	depends = lib32-libx11
+	depends = lib32-llvm-libs-git=11.0.0_r359350.a378c044950
+	depends = lib32-libdrm
+	depends = lib32-libelf
+	depends = lib32-libxshmfence
+	optdepends = lib32-vulkan-mesa-layer-git: a vulkan layer to display information using an overlay
+	provides = lib32-vulkan-radeon
+	provides = lib32-vulkan-driver
+	conflicts = lib32-vulkan-radeon
+
+pkgname = lib32-mesa-git
+	pkgdesc = an open-source implementation of the OpenGL specification (32-bit) (git version)
+	depends = lib32-libdrm
+	depends = lib32-libxxf86vm
+	depends = lib32-libxdamage
+	depends = lib32-systemd
+	depends = lib32-libelf
+	depends = lib32-libxshmfence
+	depends = lib32-llvm-libs-git=11.0.0_r359350.a378c044950
+	depends = lib32-wayland
+	depends = lib32-lm_sensors
+	depends = lib32-libglvnd
+	depends = mesa-git
+	optdepends = opengl-man-pages: for the OpenGL API man pages
+	provides = lib32-mesa
+	provides = lib32-mesa-vdpau
+	provides = lib32-mesa-libgl
+	provides = lib32-opengl-driver
+	conflicts = lib32-mesa
+	conflicts = lib32-mesa-vdpau
+	conflicts = lib32-mesa-libgl
+
