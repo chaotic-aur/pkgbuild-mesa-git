@@ -1,6 +1,6 @@
 pkgbase = mesa-git
 	pkgdesc = mesa trunk monolithic (git version)
-	pkgver = 20.2.0_devel.125909.c8d848b2782
+	pkgver = 20.2.0_devel.125920.9418c8ec8dd
 	pkgrel = 1
 	epoch = 1
 	url = http://mesa3d.sourceforge.net
@@ -106,7 +106,7 @@ pkgname = vulkan-radeon-git
 	depends = libxshmfence
 	depends = libelf
 	depends = libdrm
-	depends = llvm-libs-git
+	depends = llvm-libs-git=11.0.0_r359350.a378c044950
 	optdepends = vulkan-mesa-layer-git: a vulkan layer to display information using an overlay
 	provides = vulkan-radeon
 	provides = vulkan-driver
