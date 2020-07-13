@@ -11,7 +11,7 @@ LLVM_VERSION=$(pacman -Si llvm-libs-git | grep -Po '^Version +: ([^-]+)' | awk '
 
 LLVM32_VERSION=$(pacman -Si lib32-llvm-libs-git | grep -Po '^Version +: ([^-]+)' | awk '{print $3}')
 makedepends=('python-mako' 'libxml2' 'libx11' 'libdrm' 'xorgproto' 'libxrandr'
-	           'libxshmfence' 'libxxf86vm' 'libxdamage' 'libvdpau' 'libva' 
+	           'libxshmfence' 'libxxf86vm' 'libxdamage' 'libvdpau' 'libva' 'libxv' 
              'wayland' 'wayland-protocols' 'elfutils' "llvm-git" 'systemd' 'libxvmc'
 	           'libomxil-bellagio' 'libglvnd' 'libunwind' 'lm_sensors' 'meson' 'libclc-git' 'clang-git' 'glslang' 'valgrind' 'zstd'
 	           'vulkan-icd-loader' 'git' 'python-mako' 'lib32-libxml2' 'lib32-expat' 'lib32-libx11' 'lib32-libdrm' 'xorgproto'
