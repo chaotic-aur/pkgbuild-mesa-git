@@ -204,7 +204,7 @@ package_compiler-rt-git() {
   provides=("compiler-rt=$pkgver")
   conflicts=('clang-svn')
 
-   local _llvmver=$(echo $pkgver | grep -Po "(^[\.\d]+)")
+   local _llvmver=$(echo "$pkgver" | grep -Po "(^[\.\d]+)")
 
   _fakeinstall_64 fakeinstall_64/usr/lib/clang/"$_llvmver"/lib/linux
   _fakeinstall_64 fakeinstall_64/usr/lib/clang/"$_llvmver"/include/{sanitizer,xray}
