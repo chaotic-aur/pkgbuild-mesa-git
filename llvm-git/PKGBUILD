@@ -1,26 +1,7 @@
 #!/usr/bin/bash
 
-# Based on AUR's llvm-git:
+
 # Based on LordHeavy's LLVM
-# Maintainer: Solomon Choina <shlomochoina@gmail.com>
-# Maintainer: Lone_Wolf <lonewolf@xs4all.nl>
-# Contributor: yurikoles <root@yurikoles.com>
-# Contributor: bearoso <bearoso@gmail.com>
-# Contributor: Luchesar V. ILIEV <luchesar%2eiliev%40gmail%2ecom>
-# Contributor: Anders Bergh <anders@archlinuxppc.org>
-# Contributor: Armin K. <krejzi at email dot com>
-# Contributor: Christian Babeux <christian.babeux@0x80.ca>
-# Contributor: Jan "heftig" Steffens <jan.steffens@gmail.com>
-# Contributor: Evangelos Foutras <evangelos@foutrelis.com>
-# Contributor: Hesiod (https://github.com/hesiod)
-# Contributor: Roberto Alsina <ralsina@kde.org>
-# Contributor: Thomas Dziedzic < gostrc at gmail >
-# Contributor: Tomas Lindquist Olsen <tomas@famolsen.dk>
-# Contributor: Tomas Wilhelmsson <tomas.wilhelmsson@gmail.com>
-
-# Contributor: Tk-Glitch <ti3nou@gmail.com>
-# Multilib and provides llvm - Initially made for chaotic-aur
-
 pkgbase=llvm-git
 pkgname=('lldb-git' 'lld-git' 'compiler-rt-git' 'clang-git' 'llvm-ocaml-git' 'llvm-libs-git' 'llvm-git'  'lib32-llvm-libs-git' 'lib32-llvm-git')
 pkgdesc='Low Level Virtual Machine (git version)'
