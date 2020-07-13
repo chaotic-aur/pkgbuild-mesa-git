@@ -5,7 +5,7 @@
 pkgbase=llvm-git
 pkgname=('lldb-git' 'lld-git' 'compiler-rt-git' 'clang-git' 'llvm-ocaml-git' 'llvm-libs-git' 'llvm-git'  'lib32-llvm-libs-git' 'lib32-llvm-git')
 pkgdesc='Low Level Virtual Machine (git version)'
-pkgver=11.0.0_r360108.2e2af6026b4
+pkgver=11.0.0_r360134.f630b8590f0
 pkgrel=1
 _ocaml_ver=4.10.0
 _pythonver=3.8
@@ -57,15 +57,7 @@ pkgver() {
 }
 
 prepare() {
-    if [  -d _build64 ]; then
-        rm -rf _build64
-    fi
-    if [  -d _build32 ]; then
-        rm -rf _build32
-    fi
-    mkdir _build64
-    mkdir _build32
-
+ 
     cd llvm-project 
     pushd clang
     patch -Np1 -i "$srcdir"/enable-SSP-and-PIE-by-default.patch
@@ -81,8 +73,9 @@ build() {
     export CXXFLAGS="$(echo "$CXXFLAGS" | sed -e "s/-fstack-protector-strong//")"
     export SAMUFLAGS="-j4"
 
-    cd "_build64"
-    cmake "$srcdir"/llvm-project/llvm  -G Ninja \
+    cmake \
+    -B _build64 \
+    -S "$srcdir"/llvm-project/llvm  -G Ninja \
         -D CMAKE_C_FLAGS="$CFLAGS" \
         -D CMAKE_CXX_FLAGS="$CXXFLAGS" \
         -D CMAKE_BUILD_TYPE=Release \
@@ -113,16 +106,18 @@ build() {
         -D CMAKE_POLICY_DEFAULT_CMP0075=NEW \
         -D LLVM_ENABLE_PROJECTS="lldb;lld;compiler-rt;clang-tools-extra;clang"
 
-    ninja  all ocaml_doc
-    DESTDIR="$srcdir/fakeinstall_64" ninja install
+    ninja -C _build64  all ocaml_doc
+    DESTDIR="$srcdir/fakeinstall_64" ninja -C _build64 install
 
-    cd "../_build32"
     export PKG_CONFIG_PATH="/usr/lb32/pkgconfig"
 
     LIB32_CFLAGS="$CFLAGS"" -m32"
     LIB32_CXXFLAGS="$CXXFLAGS"" -m32"
 
-    cmake "$srcdir"/llvm-project/llvm  -G Ninja \
+    cmake \
+    -B _build32 \
+    -S "$srcdir"/llvm-project/llvm \
+    -G Ninja \
         -DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra;compiler-rt" \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_INSTALL_PREFIX=/usr \
@@ -147,8 +142,8 @@ build() {
         -DLLVM_BINUTILS_INCDIR=/usr/include \
         -DLLVM_APPEND_VC_REV=ON
 
-    ninja all
-    DESTDIR="$srcdir/fakeinstall_32" ninja install
+    ninja -C _build32 all
+    DESTDIR="$srcdir/fakeinstall_32" ninja -C _build32 install
 }
 
 _fakeinstall_64 () {
