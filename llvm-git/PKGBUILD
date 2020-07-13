@@ -22,9 +22,9 @@
 # Multilib and provides llvm - Initially made for chaotic-aur
 
 pkgbase=llvm-git
-pkgname=('lldb-git' 'lld-git' 'polly-git' 'compiler-rt-git' 'clang-git' 'llvm-ocaml-git' 'llvm-libs-git' 'llvm-git'  'lib32-llvm-libs-git' 'lib32-llvm-git')
+pkgname=('lldb-git' 'lld-git' 'compiler-rt-git' 'clang-git' 'llvm-ocaml-git' 'llvm-libs-git' 'llvm-git'  'lib32-llvm-libs-git' 'lib32-llvm-git')
 pkgdesc='Low Level Virtual Machine (git version)'
-pkgver=11.0.0_r359436.f7a7efbf88b
+pkgver=11.0.0_r360071.e73d0b57199
 pkgrel=1
 _ocaml_ver=4.10.0
 _pythonver=3.8
@@ -82,15 +82,15 @@ prepare() {
     if [  -d _build32 ]; then
         rm -rf _build32
     fi
-    mkdir _build64
-    mkdir _build32
+    mkdir $srcdir/_build64
+    mkdir $srcdir/_build32
 
     cd llvm-project 
     pushd clang
     patch -Np1 -i "$srcdir"/enable-SSP-and-PIE-by-default.patch
     popd
     # llvm-project contains a lot of stuff, remove parts that aren't used by this package
-    rm -rf debuginfo-tests libclc libcxx libcxxabi libunwind llgo openmp parallel-libs pstl libc
+    rm -rf debuginfo-tests libclc polly libcxx libcxxabi libunwind llgo openmp parallel-libs pstl libc
 
     rm -rf "$srcdir"/fakeinstall*
 }
@@ -100,7 +100,7 @@ build() {
     export CXXFLAGS="$(echo "$CXXFLAGS" | sed -e "s/-fstack-protector-strong//")"
     export SAMUFLAGS="-j4"
 
-    cd _build64
+    cd "$srcdir/_build64"
     cmake "$srcdir"/llvm-project/llvm  -G Ninja \
         -D CMAKE_C_FLAGS="$CFLAGS" \
         -D CMAKE_CXX_FLAGS="$CXXFLAGS" \
@@ -111,6 +111,8 @@ build() {
         -D LLVM_HOST_TRIPLE="$CHOST" \
         -D LLVM_ENABLE_RTTI=ON \
         -D LLVM_ENABLE_FFI=ON \
+        -D LLVM_BINUTILS_INCDIR=/usr/include \
+        -D LLVM_ENABLE_LTO=ON \
         -D FFI_INCLUDE_DIR="$(pkg-config --cflas-only-I libffi | cut -c3-)" \
         -D LLVM_BUILD_LLVM_DYLIB=ON \
         -D CLANG_LINK_CLANG_DYLIB=ON \
@@ -127,15 +129,14 @@ build() {
         -D LLVM_BINUTILS_INCDIR=/usr/include \
         -D LLDB_USE_SYSTEM_SIX=1 \
         -D LLVM_VERSION_SUFFIX="" \
-        -D POLLY_ENABLE_GPGPU_CODEGEN=ON \
         -D CMAKE_POLICY_DEFAULT_CMP0075=NEW \
-        -D LLVM_ENABLE_PROJECTS="polly;lldb;lld;compiler-rt;clang-tools-extra;clang"
+        -D LLVM_ENABLE_PROJECTS="lldb;lld;compiler-rt;clang-tools-extra;clang"
 
     ninja  all ocaml_doc
     DESTDIR="$srcdir/fakeinstall_64" ninja install
 
-    cd ../_build32
-    export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
+    cd "$srcdir/_build32"
+    export PKG_CONFIG_PATH="/usr/lb32/pkgconfig"
 
     LIB32_CFLAGS="$CFLAGS"" -m32"
     LIB32_CXXFLAGS="$CXXFLAGS"" -m32"
@@ -150,6 +151,8 @@ build() {
         -DLLVM_TARGET_ARCH:STRING=i686 \
         -DLLVM_HOST_TRIPLE="$CHOST" \
         -DLLVM_DEFAULT_TARGET_TRIPLE="i686-pc-linux-gnu" \
+        -DLLVM_BINUTILS_INCDIR=/usr/include \
+      ┆ -DLLVM_ENABLE_LTO=ON \
         -DLLVM_BUILD_LLVM_DYLIB=ON \
         -DLLVM_LINK_LLVM_DYLIB=ON \
         -DLLVM_ENABLE_BINDINGS=OFF \
@@ -216,15 +219,6 @@ package_lld-git(){
    _fakeinstall_64 fakeinstall_64/usr/lib/cmake/lld/ 
    install -Dm644 "$srcdir"/llvm-project/lld/docs/ld.lld.1 "$pkgdir/usr/share/man/man1"
    install -Dm644 "$srcdir"/llvm-project/lld/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
-}
-package_polly-git() {
-    pkgdesc="Polly is a high-level loop and data-locality optimizer and optimization infrastructure for LLVM"
-    url="https://polly.llvm.org/"
-    arch=('any')
-    depends=("llvm-git=$pkgver-$pkgrel")
-    _fakeinstall_64 fakeinstall_64/usr/include/polly
-    _fakeinstall_64 fakeinstall_64/usr/lib/cmake/polly/
-    install -Dm644 "$srcdir"/llvm-project/polly/LICENSE.txt "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 
 package_compiler-rt-git() {

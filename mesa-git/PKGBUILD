@@ -2,7 +2,7 @@ pkgbase=mesa-git
 pkgname=('vulkan-mesa-layers-git' 'opencl-mesa-git' 'vulkan-intel-git' 'vulkan-radeon-git' 'mesa-git' 'lib32-vulkan-mesa-layers-git' 'lib32-vulkan-intel-git' 'lib32-vulkan-radeon-git' 'lib32-mesa-git')
 pkgdesc="mesa trunk monolithic (git version)"
 epoch=1
-pkgver=20.2.0_devel.125920.9418c8ec8dd
+pkgver=20.2.0_devel.125939.e00adef34a5
 pkgrel=1
 groups=('chaotic-mesa-git')
 arch=('x86_64')
@@ -42,50 +42,52 @@ if [  -d _build32 ]; then
         rm -rf _build32
     fi
 }
+
 build() {
-  export CC="gcc"
-  export CXX="g++"
+  export SAMUFLAGS="-j1"
+  export CC="clang"
+  export CXX="clang++" 
 
   arch-meson mesa _build64 \
-    -D b_lto=true \
+    -D b_lto=false \
     -D b_ndebug=true \
-    -D platforms=x11,wayland,drm,surfaceless \
+    -D platforms=x11,wayland,surfaceless \
     -D dri-drivers=i915,i965,r100,r200,nouveau \
     -D gallium-drivers=r300,r600,radeonsi,nouveau,iris,zink,virgl,svga,swrast \
     -D vulkan-drivers=amd,intel \
     -D vulkan-overlay-layer=true \
     -D vulkan-device-select-layer=true \
     -D swr-arches=avx,avx2 \
-    -D dri3=true \
-    -D egl=true \
+    -D dri3=enabled \
+    -D egl=enabled \
     -D gallium-extra-hud=true \
     -D gallium-nine=true \
     -D gallium-omx=bellagio \
     -D gallium-opencl=icd \
-    -D gallium-va=true \
-    -D gallium-vdpau=true \
-    -D gallium-xa=true \
-    -D gallium-xvmc=false \
-    -D gbm=true \
-    -D gles1=false \
-    -D gles2=true \
+    -D gallium-va=enabled \
+    -D gallium-vdpau=enabled \
+    -D gallium-xa=enabled \
+    -D gallium-xvmc=enabled \
+    -D gbm=enabled \
+    -D gles1=disabled \
+    -D gles2=enabled \
     -D glvnd=true \
     -D glx=dri \
-    -D libunwind=true \
-    -D llvm=true \
-    -D lmsensors=true \
+    -D libunwind=enabled \
+    -D llvm=enabled \
+    -D lmsensors=enabled \
     -D osmesa=gallium \
-    -D shared-glapi=true \
-    -D valgrind=true
+    -D shared-glapi=enabled \
+    -D valgrind=enabled \
+    -D xlib-lease=enabled
 
   # Print config
   meson configure _build64
-
-  ninja -C _build64
+  meson compile -j1 -C _build64
 
   # fake installation to be seperated into packages
   # outside of fakeroot but mesa doesn't need to chown/mod
-  DESTDIR="$srcdir/fakeinstall64" ninja -C _build64 install
+  DESTDIR="$srcdir/fakeinstall64" meson install -C _build64
 
   export CC="gcc -m32"
   export CXX="g++ -m32"
@@ -128,11 +130,11 @@ build() {
   # Print config
   meson configure _build32
 
-  ninja -C _build32
+  meson compile -C _build32
 
   # fake installation to be seperated into packages
   # outside of fakeroot but mesa doesn't need to chown/mod
-  DESTDIR="$srcdir/fakeinstall32" ninja -C _build32 install
+  DESTDIR="$srcdir/fakeinstall32" meson install -C _build32
 
 }
 
