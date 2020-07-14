@@ -75,7 +75,7 @@ build() {
 
     cmake \
     -B _build64 \
-    -S "$srcdir"/llvm-project/llvm  -G Ninja \
+    -S llvm-project/llvm  -G Ninja \
         -D CMAKE_C_FLAGS="$CFLAGS" \
         -D CMAKE_CXX_FLAGS="$CXXFLAGS" \
         -D CMAKE_BUILD_TYPE=Release \
@@ -116,7 +116,7 @@ build() {
 
     cmake \
     -B _build32 \
-    -S "$srcdir"/llvm-project/llvm \
+    -S llvm-project/llvm \
     -G Ninja \
         -DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra;compiler-rt" \
         -DCMAKE_BUILD_TYPE=Release \
