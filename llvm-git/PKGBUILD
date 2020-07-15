@@ -189,7 +189,6 @@ package_lld-git(){
    provides=("lld=$pkgver")
    conflicts=('lld')
 
-   _fakeinstall_64 fakeinstall_64/usr/bin/*ld*
    _fakeinstall_64 fakeinstall_64/usr/include/lld
    _fakeinstall_64 fakeinstall_64/usr/lib/liblld*
    _fakeinstall_64 fakeinstall_64/usr/lib/cmake/lld/ 
