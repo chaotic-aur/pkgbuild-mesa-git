@@ -141,9 +141,9 @@ build() {
         -DLLVM_ENABLE_DOXYGEN=OFF \
         -DFFI_INCLUDE_DIR="$(pkg-config --variable=includedir libffi)" \
         -DLLVM_BINUTILS_INCDIR=/usr/include \
-        -DLLVM_APPEND_VC_REV=ON
+        -DLLVM_APPEND_VC_REV=ON 
 
-    ninja -C _build32 all
+    ninja -C _build32 all LLVMgold
     DESTDIR="$srcdir/fakeinstall_32" ninja -C _build32 install
 }
 
@@ -337,7 +337,9 @@ package_lib32-llvm-libs-git() {
 
   _fakeinstall_32 fakeinstall_32/usr/lib32/libLLVM-*.so
   _fakeinstall_32 fakeinstall_32/usr/lib32/libRemarks.so.*
-
+  _fakeinstall_32 fakeinstall_32/usr/lib32/LLVMgold.so
+  inall -S "$pkgdir/usr/lib32/bfd-plugins"
+  ln -s ../LLVMgold.so "$pkgdir/usr/lib32/bfd-plugins/LLVMgold.so"
   install -Dm644 "$srcdir"/llvm-project/llvm/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 
