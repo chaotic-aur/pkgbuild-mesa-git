@@ -178,6 +178,7 @@ package_lldb-git() {
      _fakeinstall_64 fakeinstall_64/usr/include/lldb
      _fakeinstall_64 fakeinstall_64/usr/lib/liblldb*
      _fakeinstall_64 fakeinstall_64/usr/lib/python"$_pythonver"/site-packages/lldb
+     _fakeinstall_64 fakeinstall_64/usr/share/man/man1/lldb.1.gz 
 
     install -Dm644 "$srcdir"/llvm-project/lldb/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 
@@ -227,6 +228,7 @@ package_clang-git() {
     _fakeinstall_64 fakeinstall_64/usr/bin/*clang*
     _fakeinstall_64 fakeinstall_64/usr/bin/{c-index-test,diagtool,find-all-symbols}
     _fakeinstall_64 fakeinstall_64/usr/bin/{hmaptool,modularize,scan-build,scan-view}
+    _fakeinstall_64 fakeinstall_64/usr/bin/pp-trace
 
     _fakeinstall_64 fakeinstall_64/usr/include/clang*
 
