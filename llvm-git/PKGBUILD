@@ -5,7 +5,7 @@
 pkgbase=llvm-git
 pkgname=('lldb-git' 'lld-git' 'compiler-rt-git' 'clang-git' 'llvm-ocaml-git' 'llvm-libs-git' 'llvm-git'  'lib32-llvm-libs-git' 'lib32-llvm-git')
 pkgdesc='Low Level Virtual Machine (git version)'
-pkgver=11.0.0_r360153.8d09f20798a
+pkgver=12.0.0_r360749.cf110506964
 pkgrel=1
 _ocaml_ver=4.10.0
 _pythonver=3.8
@@ -69,8 +69,8 @@ prepare() {
 }
 
 build() {
-    export CFLAGS="$(echo "$CFLAGS" | sed -e "s/-fstack-protector-strong//")"
-    export CXXFLAGS="$(echo "$CXXFLAGS" | sed -e "s/-fstack-protector-strong//")"
+    export CFLAGS="$(echo "$CFLAGS" | sed -e "s/-fstack-protector-strong//") -I/usr/include/tensorflow "
+    export CXXFLAGS="$(echo "$CXXFLAGS" | sed -e "s/-fstack-protector-strong//") -I/usr/include/tensorflow  "
     export SAMUFLAGS="-j4"
 
     cmake \
@@ -87,7 +87,7 @@ build() {
         -D LLVM_ENABLE_FFI=ON \
         -D LLVM_BINUTILS_INCDIR=/usr/include \
         -D LLVM_ENABLE_LTO=ON \
-        -D FFI_INCLUDE_DIR="$(pkg-config --cflas-only-I libffi | cut -c3-)" \
+        -D FFI_INCLUDE_DIR="$(pkg-config --variable=includedir libffi )" \
         -D LLVM_BUILD_LLVM_DYLIB=ON \
         -D CLANG_LINK_CLANG_DYLIB=ON \
         -D LLVM_LINK_LLVM_DYLIB=ON \
@@ -97,6 +97,7 @@ build() {
         -D LLVM_ENABLE_DOXYGEN=OFF \
         -D LIBCLANG_INCLUDE_CLANG_TOOLS_EXTRA=ON \
         -D CLANG_INCLUDE_DOCS=ON \
+        -D LLVM_EXPERIMENTAL_TARGETS_TO_BUILD=AVR \
         -D LLVM_ENABLE_SPHINX=ON \
         -D SPHINX_OUTPUT_HTML=OFF \
         -D SPHINX_WARNINGS_AS_ERRORS=OFF \
@@ -106,7 +107,7 @@ build() {
         -D CMAKE_POLICY_DEFAULT_CMP0075=NEW \
         -D LLVM_ENABLE_PROJECTS="lldb;lld;compiler-rt;clang-tools-extra;clang"
 
-    ninja -C _build64  all ocaml_doc
+    ninja -C _build64 LLVMgold  all ocaml_doc
     DESTDIR="$srcdir/fakeinstall_64" ninja -C _build64 install
 
     export PKG_CONFIG_PATH="/usr/lb32/pkgconfig"
@@ -272,8 +273,12 @@ package_llvm-libs-git() {
     replaces=('llvm-libs-svn')
     conflicts=('llvm-libs-svn')
 
-    _fakeinstall_64 fakeinstall_64/usr/lib/libLLVM-*.so
+    _fakeinstall_64 fakeinstall_64/usr/lib/libLLVM-*.so*
+    _fakeinstall_64 fakeinstall_64//usr/lib/libLTO.so*
     _fakeinstall_64 fakeinstall_64/usr/lib/libRemarks.so.*
+    _fakeinstall_64 fakeinstall_64/usr/lib/LLVMgold.so
+    install -d "$pkgdir/usr/lib/bfd-plugins"
+    ln -s ../LLVMgold.so "$pkgdir/usr/lib/bfd-plugins/LLVMgold.so"
 
     install -Dm644 "$srcdir"/llvm-project/llvm/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
