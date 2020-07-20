@@ -193,7 +193,7 @@ package_lld-git(){
    _fakeinstall_64 fakeinstall_64/usr/include/lld
    _fakeinstall_64 fakeinstall_64/usr/lib/liblld*
    _fakeinstall_64 fakeinstall_64/usr/lib/cmake/lld/
-   _fakeinstall_64 fakeinstall_64/usr/bin/*ldd*
+   _fakeinstall_64 fakeinstall_64/usr/bin/*lld*
    _fakeinstall_64 fakeinstall_64/usr/bin/wasm-ld
    install -Dm644 "$srcdir"/llvm-project/lld/docs/ld.lld.1 "$pkgdir/usr/share/man/man1"
    install -Dm644 "$srcdir"/llvm-project/lld/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
