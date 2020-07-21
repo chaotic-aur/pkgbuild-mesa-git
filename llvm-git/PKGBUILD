@@ -271,8 +271,8 @@ package_llvm-libs-git() {
     pkgdesc="LLVM runtime libraries (git version)"
     depends=('gcc-libs' 'zlib' 'libffi' 'libedit' 'libxml2' 'ncurses')
     provides=("llvm-libs=$pkgver")
-    replaces=('llvm-libs-svn')
-    conflicts=('llvm-libs-svn')
+    replaces=('llvm-libs-svn' 'llvm-libs')
+    conflicts=('llvm-libs-svn' 'llvm-libs')
 
     _fakeinstall_64 fakeinstall_64/usr/lib/libLLVM-*.so*
     _fakeinstall_64 fakeinstall_64//usr/lib/libLTO.so*
@@ -331,8 +331,8 @@ package_lib32-llvm-libs-git() {
   pkgdesc='Low Level Virtual Machine library (runtime library)(32-bit)(git version)'
   depends=('lib32-libffi' 'lib32-zlib' 'lib32-libxml2' 'lib32-gcc-libs')
   provides=("lib32-llvm-libs=$pkgver")
-  replaces=('lib32-llvm-libs-svn')
-  conflicts=('lib32-llvm-libs-svn')
+  replaces=('lib32-llvm-libs-svn' 'lib32-llvm-libs')
+  conflicts=('lib32-llvm-libs-svn' 'lib32-llvm-libs')
 
   _fakeinstall_32 fakeinstall_32/usr/lib32/libLLVM-*.so
   _fakeinstall_32 fakeinstall_32/usr/lib32/libRemarks.so.*
