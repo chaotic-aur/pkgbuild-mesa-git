@@ -72,8 +72,10 @@ build() {
     export CFLAGS="$(echo "$CFLAGS" | sed -e "s/-fstack-protector-strong//")"
     export CXXFLAGS="$(echo "$CXXFLAGS" | sed -e "s/-fstack-protector-strong//")"
     export SAMUFLAGS="-j4"
-    export CC=clang
-    export CXX=clang++
+
+#    export CC=clang
+#    export CXX=clang++
+
     cmake \
     -B _build64 \
     -S llvm-project/llvm  -G Ninja \
