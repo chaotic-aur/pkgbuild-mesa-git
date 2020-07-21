@@ -335,7 +335,7 @@ package_lib32-llvm-libs-git() {
   _fakeinstall_32 fakeinstall_32/usr/lib32/libLLVM-*.so
   _fakeinstall_32 fakeinstall_32/usr/lib32/libRemarks.so.*
   _fakeinstall_32 fakeinstall_32/usr/lib32/LLVMgold.so
-  inall -S "$pkgdir/usr/lib32/bfd-plugins"
+  install -d "$pkgdir/usr/lib32/bfd-plugins"
   ln -s ../LLVMgold.so "$pkgdir/usr/lib32/bfd-plugins/LLVMgold.so"
   install -Dm644 "$srcdir"/llvm-project/llvm/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
