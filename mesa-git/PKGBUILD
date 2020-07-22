@@ -2,7 +2,7 @@ pkgbase=mesa-git
 pkgname=('vulkan-mesa-layers-git' 'opencl-mesa-git' 'vulkan-intel-git' 'vulkan-radeon-git' 'mesa-git' 'lib32-vulkan-mesa-layers-git' 'lib32-vulkan-intel-git' 'lib32-vulkan-radeon-git' 'lib32-mesa-git')
 pkgdesc="mesa trunk monolithic (git version)"
 epoch=1
-pkgver=20.2.0_devel.125939.e00adef34a5
+pkgver=20.2.0_devel.126383.fd20e986249
 pkgrel=1
 groups=('chaotic-mesa-git')
 arch=('x86_64')
@@ -17,7 +17,8 @@ makedepends=('python-mako' 'libxml2' 'libx11' 'libdrm' 'xorgproto' 'libxrandr'
 	           'vulkan-icd-loader' 'git' 'python-mako' 'lib32-libxml2' 'lib32-expat' 'lib32-libx11' 'lib32-libdrm' 'xorgproto'
              'lib32-libxrandr' 'lib32-libxshmfence' 'lib32-libxxf86vm' 'lib32-libxdamage' 'gcc-multilib' 'lib32-libelf' 'lib32-llvm-git'
              'lib32-systemd' 'lib32-libvdpau' 'lib32-libva' 'lib32-wayland' 'wayland-protocols' 'lib32-libglvnd' 'lib32-lm_sensors' 
-             'meson' 'glslang' 'valgrind' 'lib32-vulkan-icd-loader' 'lib32-zstd'
+             'meson' 'glslang' 'valgrind' 'lib32-vulkan-icd-loader' 'lib32-zstd' 'clang-git' 'lld-git'
+
 )
 url="http://mesa3d.sourceforge.net"
 license=('custom')
@@ -42,17 +43,19 @@ if [  -d _build64 ]; then
 if [  -d _build32 ]; then
         rm -rf _build32
     fi
+
+  cd "$srcdir"/mesa
 }
 
 build() {
   export SAMUFLAGS="-j1"
-  export CC="clang"
-  export CXX="clang++" 
+  export CC="clang -v -flto -fuse-ld=lld -save-temps"
+  export CXX="clang++ -v -flto -fuse-ld=lld -save-temps"
 
   arch-meson mesa _build64 \
     -D b_lto=false \
     -D b_ndebug=true \
-    -D platforms=x11,wayland,surfaceless \
+    -D platforms=x11,wayland \
     -D dri-drivers=i915,i965,r100,r200,nouveau \
     -D gallium-drivers=r300,r600,radeonsi,nouveau,iris,zink,virgl,svga,swrast \
     -D vulkan-drivers=amd,intel \
@@ -90,8 +93,8 @@ build() {
   # outside of fakeroot but mesa doesn't need to chown/mod
   DESTDIR="$srcdir/fakeinstall64" meson install -C _build64
 
-  export CC="gcc -m32"
-  export CXX="g++ -m32"
+  export CC="clang -m32 -v -fuse-ld=lld -save-temps"
+  export CXX="clang++ -m32 -v -fuse-ld=lld -save-temps"
   export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
 
   arch-meson mesa _build32 \

@@ -1,6 +1,6 @@
 pkgbase = mesa-git
 	pkgdesc = mesa trunk monolithic (git version)
-	pkgver = 20.2.0_devel.125920.9418c8ec8dd
+	pkgver = 20.2.0_devel.126383.fd20e986249
 	pkgrel = 1
 	epoch = 1
 	url = http://mesa3d.sourceforge.net
@@ -18,11 +18,13 @@ pkgbase = mesa-git
 	makedepends = libxdamage
 	makedepends = libvdpau
 	makedepends = libva
+	makedepends = libxv
 	makedepends = wayland
 	makedepends = wayland-protocols
 	makedepends = elfutils
 	makedepends = llvm-git
 	makedepends = systemd
+	makedepends = libxvmc
 	makedepends = libomxil-bellagio
 	makedepends = libglvnd
 	makedepends = libunwind
@@ -60,6 +62,8 @@ pkgbase = mesa-git
 	makedepends = valgrind
 	makedepends = lib32-vulkan-icd-loader
 	makedepends = lib32-zstd
+	makedepends = clang-git
+	makedepends = lld-git
 	source = mesa::git+https://gitlab.freedesktop.org/mesa/mesa.git
 	source = LICENSE
 	source = llvm32.native
@@ -106,7 +110,7 @@ pkgname = vulkan-radeon-git
 	depends = libxshmfence
 	depends = libelf
 	depends = libdrm
-	depends = llvm-libs-git=11.0.0_r359350.a378c044950
+	depends = llvm-libs-git=12.0.0_r361034.bef56f7fe23
 	optdepends = vulkan-mesa-layer-git: a vulkan layer to display information using an overlay
 	provides = vulkan-radeon
 	provides = vulkan-driver
@@ -123,7 +127,7 @@ pkgname = mesa-git
 	depends = libelf
 	depends = libomxil-bellagio
 	depends = libunwind
-	depends = llvm-libs-git=11.0.0_r359350.a378c044950
+	depends = llvm-libs-git=12.0.0_r361034.bef56f7fe23
 	depends = lm_sensors
 	depends = libglvnd
 	optdepends = opengl-man-pages: for the OpenGL API man pages
@@ -162,7 +166,7 @@ pkgname = lib32-vulkan-radeon-git
 	depends = lib32-libgcrypt
 	depends = lib32-wayland
 	depends = lib32-libx11
-	depends = lib32-llvm-libs-git=11.0.0_r359350.a378c044950
+	depends = lib32-llvm-libs-git=12.0.0_r361034.bef56f7fe23
 	depends = lib32-libdrm
 	depends = lib32-libelf
 	depends = lib32-libxshmfence
@@ -179,7 +183,7 @@ pkgname = lib32-mesa-git
 	depends = lib32-systemd
 	depends = lib32-libelf
 	depends = lib32-libxshmfence
-	depends = lib32-llvm-libs-git=11.0.0_r359350.a378c044950
+	depends = lib32-llvm-libs-git=12.0.0_r361034.bef56f7fe23
 	depends = lib32-wayland
 	depends = lib32-lm_sensors
 	depends = lib32-libglvnd
