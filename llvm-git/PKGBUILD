@@ -3,7 +3,7 @@
 
 # Based on LordHeavy's LLVM
 pkgbase=llvm-git
-pkgname=('lldb-git' 'lld-git' 'compiler-rt-git' 'clang-git' 'llvm-ocaml-git' 'llvm-libs-git' 'llvm-git'  'lib32-llvm-libs-git' 'lib32-llvm-git')
+pkgname=('lldb-git' 'lld-git' 'polly-git' 'compiler-rt-git' 'clang-git' 'llvm-ocaml-git' 'llvm-libs-git' 'llvm-git'  'lib32-llvm-libs-git' 'lib32-llvm-git')
 pkgdesc='Low Level Virtual Machine (git version)'
 pkgver=12.0.0_r360857.ce052110ac9
 pkgrel=1
@@ -63,7 +63,7 @@ prepare() {
     patch -Np1 -i "$srcdir"/enable-SSP-and-PIE-by-default.patch
     popd
     # llvm-project contains a lot of stuff, remove parts that aren't used by this package
-    rm -rf debuginfo-tests libclc polly libcxx libcxxabi libunwind llgo openmp parallel-libs pstl libc
+    rm -rf debuginfo-tests libclc libcxx libcxxabi libunwind llgo openmp parallel-libs pstl libc
 
     rm -rf "$srcdir"/fakeinstall*
 }
@@ -106,7 +106,7 @@ build() {
         -D LLDB_USE_SYSTEM_SIX=1 \
         -D LLVM_VERSION_SUFFIX="" \
         -D CMAKE_POLICY_DEFAULT_CMP0075=NEW \
-        -D LLVM_ENABLE_PROJECTS="lldb;lld;compiler-rt;clang-tools-extra;clang"
+        -D LLVM_ENABLE_PROJECTS="lldb;polly;lld;compiler-rt;clang-tools-extra;clang"
 
     ninja -C _build64 LLVMgold  all ocaml_doc
     DESTDIR="$srcdir/fakeinstall_64" ninja -C _build64 install
@@ -194,11 +194,23 @@ package_lld-git(){
    _fakeinstall_64 fakeinstall_64/usr/lib/liblld*
    _fakeinstall_64 fakeinstall_64/usr/lib/cmake/lld/
    _fakeinstall_64 fakeinstall_64/usr/bin/lld*
+   _fakeinstall_64 fakeinstall_64/usr/bin/*lld
    _fakeinstall_64 fakeinstall_64/usr/bin/wasm-ld
    install -Dm644 "$srcdir"/llvm-project/lld/docs/ld.lld.1 "$pkgdir/usr/share/man/man1"
    install -Dm644 "$srcdir"/llvm-project/lld/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 
+package_polly-git() {
+    pkgdesc="Polly is a high-level loop and data-locality optimizer and optimization infrastructure for LLVM"
+    url="https://polly.llvm.org/"
+    arch=('any')
+    depends=("llvm-git=$pkgver-$pkgrel")
+    _fakeinstall_64 fakeinstall_64/usr/include/polly
+    _fakeinstall_64 fakeinstall_64/usr/lib/cmake/polly/
+    _fakeinstall_64 fakeinstall_64/usr/lib/*Polly*
+    _fakeinstall_64 fakeinstall_64/usr/lib/usr/lib/libGPURuntime.so
+    install -Dm644 "$srcdir"/llvm-project/polly/LICENSE.txt "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
 package_compiler-rt-git() {
   pkgdesc="Compiler runtime libraries for clang (git version)"
   url="https://compiler-rt.llvm.org/"
