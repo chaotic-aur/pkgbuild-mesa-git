@@ -208,7 +208,6 @@ package_polly-git() {
     _fakeinstall_64 fakeinstall_64/usr/include/polly
     _fakeinstall_64 fakeinstall_64/usr/lib/cmake/polly/
     _fakeinstall_64 fakeinstall_64/usr/lib/*Polly*
-    _fakeinstall_64 fakeinstall_64/usr/lib/usr/lib/libGPURuntime.so
     install -Dm644 "$srcdir"/llvm-project/polly/LICENSE.txt "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 package_compiler-rt-git() {
@@ -327,7 +326,8 @@ package_llvm-git() {
   pushd "$srcdir"/llvm-project/llvm/utils/lit
   python3 setup.py install --root="$pkgdir" -O1
   popd
-
+  
+  ln -s $pkgdir/usr/bin/lit /usr/bin/llvm-lit
   # Remove documentation sources
   rm -rf "$pkgdir"/usr/share/doc/llvm/html/{_sources,.buildinfo}
   # Remove libs which conflict with llvm-libs
