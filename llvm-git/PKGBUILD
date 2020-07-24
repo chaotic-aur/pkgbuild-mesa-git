@@ -208,7 +208,7 @@ package_polly-git() {
     _fakeinstall_64 fakeinstall_64/usr/include/polly
     _fakeinstall_64 fakeinstall_64/usr/lib/cmake/polly/
     _fakeinstall_64 fakeinstall_64/usr/lib/*Polly*
-    _fakeinstall_64 fakeinstall_64/usr/lib/libGPURuntime.so
+    _fakeinstall_64 fakeinstall_64/usr/lib/libGPU*
     install -Dm644 "$srcdir"/llvm-project/polly/LICENSE.txt "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 package_compiler-rt-git() {
