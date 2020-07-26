@@ -106,7 +106,7 @@ build() {
         -D LLDB_USE_SYSTEM_SIX=1 \
         -D LLVM_VERSION_SUFFIX="" \
         -D CMAKE_POLICY_DEFAULT_CMP0075=NEW \
-        -D POLLY_ENABLE_GPGPU_CODEGEN=ON
+        -D POLLY_ENABLE_GPGPU_CODEGEN=ON \
         -D LLVM_ENABLE_PROJECTS="lldb;polly;lld;compiler-rt;clang-tools-extra;clang"
 
     ninja -C _build64 LLVMgold  all ocaml_doc
