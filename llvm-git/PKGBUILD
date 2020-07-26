@@ -15,7 +15,7 @@ url="https://llvm.org/"
 license=('custom:Apache 2.0 with LLVM Exception')
 makedepends=('git' 'cmake' 'ninja' 'libffi' 'libedit' 'ncurses' 'libxml2'
            'python-sphinx' 'ocaml' 'ocaml-ctypes' 'ocaml-findlib' 
-            'python-sphinx' 'python-recommonmark' 'clang'
+            'python-sphinx' 'python-recommonmark' 'clang' 'cuda' 'opencl-headers'
              'swig' 'python' 'lib32-gcc-libs' 'lib32-libffi' 
                'lib32-libxml2' 'lib32-zlib' 'python2')
 
