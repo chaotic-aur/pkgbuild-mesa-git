@@ -1,8 +1,9 @@
+#Maintainer: Solomon Choina <shlomochoina@gmail.com>
 pkgbase=mesa-git
 pkgname=('vulkan-mesa-layers-git' 'opencl-mesa-git' 'vulkan-intel-git' 'vulkan-radeon-git' 'mesa-git' 'lib32-vulkan-mesa-layers-git' 'lib32-vulkan-intel-git' 'lib32-vulkan-radeon-git' 'lib32-mesa-git')
 pkgdesc="mesa trunk monolithic (git version)"
 epoch=1
-pkgver=20.2.0_devel.126383.fd20e986249
+pkgver=20.2.0_devel.126561.12dd5455f43
 pkgrel=1
 groups=('chaotic-mesa-git')
 arch=('x86_64')
@@ -20,7 +21,7 @@ makedepends=('python-mako' 'libxml2' 'libx11' 'libdrm' 'xorgproto' 'libxrandr'
              'meson' 'glslang' 'valgrind' 'lib32-vulkan-icd-loader' 'lib32-zstd' 'clang-git' 'lld-git'
 
 )
-url="http://mesa3d.sourceforge.net"
+url="https://www.mesa3d.org/"
 license=('custom')
 source=('mesa::git+https://gitlab.freedesktop.org/mesa/mesa.git'
         'LICENSE'
@@ -49,8 +50,8 @@ if [  -d _build32 ]; then
 
 build() {
   export SAMUFLAGS="-j1"
-  export CC="clang -v -flto -fuse-ld=lld -save-temps"
-  export CXX="clang++ -v -flto -fuse-ld=lld -save-temps"
+  export CC="clang -fuse-ld=lld"
+  export CXX="clang++ -fuse-ld=lld"
 
   arch-meson mesa _build64 \
     -D b_lto=false \
@@ -91,10 +92,10 @@ build() {
 
   # fake installation to be seperated into packages
   # outside of fakeroot but mesa doesn't need to chown/mod
-  DESTDIR="$srcdir/fakeinstall64" meson install -C _build64
+  DESTDIR="$srcdir/fakeinstall_64" meson install -C _build64
 
-  export CC="clang -m32 -v -fuse-ld=lld -save-temps"
-  export CXX="clang++ -m32 -v -fuse-ld=lld -save-temps"
+  export CC="clang -m32 -fuse-ld=lld"
+  export CXX="clang++ -m32 -fuse-ld=lld"
   export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
 
   arch-meson mesa _build32 \
@@ -138,7 +139,7 @@ build() {
 
   # fake installation to be seperated into packages
   # outside of fakeroot but mesa doesn't need to chown/mod
-  DESTDIR="$srcdir/fakeinstall32" meson install -C _build32
+  DESTDIR="$srcdir/fakeinstall_32" meson install -C _build32
 
 }
 
@@ -164,6 +165,7 @@ _install_32 () {
 package_vulkan-mesa-layers-git() {
   pkgdesc="Mesa's Vulkan overlay layers (git version)"
   provides=('vulkan-mesa-layers')
+  depends=('wayland' 'python' 'libdrm-git')
   conflicts=('vulkan-mesa-layer-git' 'vulkan-mesa-layers')
   replaces=('vulkan-mesa-layer-git')
 
@@ -209,7 +211,7 @@ package_vulkan-intel-git() {
 
 package_vulkan-radeon-git() {
   pkgdesc="Radeon's Vulkan mesa driver (git version)"
-  depends=('wayland' 'libx11' 'libxshmfence' 'libelf' 'libdrm' "llvm-libs-git=$LLVM_VERSION")
+  depends=('wayland' 'libx11' 'libxshmfence' 'libelf' 'libdrm' 'zstd' "llvm-libs-git=$LLVM_VERSION")
   optdepends=('vulkan-mesa-layer-git: a vulkan layer to display information using an overlay')
   provides=('vulkan-radeon' 'vulkan-driver')
   conflicts=('vulkan-radeon')
@@ -222,8 +224,10 @@ package_vulkan-radeon-git() {
 
 package_mesa-git() {
   pkgdesc="an open-source implementation of the OpenGL specification (git version)"
-  depends=('libdrm' 'wayland' 'libxxf86vm' 'libxdamage' 'libxshmfence' 'libsystemd' 'libelf'
-           'libomxil-bellagio' 'libunwind' "llvm-libs-git=$LLVM_VERSION" 'lm_sensors' 'libglvnd')
+  depends=('libdrm' 'wayland' 'libxxf86vm' 'libxdamage' 
+           'libxshmfence' 'libsystemd' 'libelf' 'libxvmc'
+           'libomxil-bellagio' 'libunwind' "llvm-libs-git=$LLVM_VERSION" 
+           'lm_sensors' 'libglvnd' 'vulkan-icd-loader' 'libxv' 'zstd')
   optdepends=('opengl-man-pages: for the OpenGL API man pages')
   provides=('mesa' 'mesa-vdpau' 'libva-mesa-driver' 'mesa-libgl' 'opengl-driver')
   conflicts=('mesa' 'mesa-vdpau' 'libva-mesa-driver' 'mesa-libgl')
@@ -256,6 +260,8 @@ package_mesa-git() {
   _install_64 fakeinstall_64/usr/lib/libGLX_mesa.so*
   _install_64 fakeinstall_64/usr/lib/libEGL_mesa.so*
 
+# Video Acceleration
+  _install_64 fakeinstall_64/usr/lib/libXvMC*
   # indirect rendering
   ln -s /usr/lib/libGLX_mesa.so.0 "$pkgdir/usr/lib/libGLX_indirect.so.0"
 
@@ -267,7 +273,7 @@ package_mesa-git() {
 
 package_lib32-vulkan-mesa-layers-git() {
   pkgdesc="Mesa's Vulkan overlay layers (32-bit) (git version)"
-  depends=('vulkan-mesa-layers-git')
+  depends=('vulkan-mesa-layers-git' 'lib32-libxcb' 'lib32-wayland')
   conflicts=('lib32-vulkan-mesa-layer-git')
   replaces=('lib32-vulkan-mesa-layer-git')
 
@@ -285,7 +291,7 @@ package_lib32-vulkan-mesa-layers-git() {
 package_lib32-vulkan-intel-git() {
   pkgdesc="Intel's Vulkan mesa driver (32-bit) (git version)"
   depends=('vulkan-intel-git' 'lib32-gcc-libs' 'lib32-libgcrypt' 'lib32-wayland'
-           'lib32-libx11' 'lib32-libxshmfence')
+           'lib32-libx11' 'lib32-libxshmfence' 'lib32-zstd' 'lib32-libdrm-git')
   optdepends=('lib32-vulkan-mesa-layer-git: a vulkan layer to display information using an overlay')
   provides=('lib32-vulkan-intel' 'lib32-vulkan-driver')
   conflicts=('lib32-vulkan-intel')
@@ -298,7 +304,7 @@ package_lib32-vulkan-intel-git() {
 
 package_lib32-vulkan-radeon-git() {
   pkgdesc="Radeon's Vulkan mesa driver (32-bit) (git version)"
-  depends=('vulkan-radeon-git' 'lib32-libgcrypt' 'lib32-wayland' 'lib32-libx11'
+  depends=('vulkan-radeon-git' 'lib32-libgcrypt' 'lib32-wayland' 'lib32-libx11' 'lib32-zstd'
            "lib32-llvm-libs-git=$LLVM32_VERSION" 'lib32-libdrm' 'lib32-libelf' 'lib32-libxshmfence')
   optdepends=('lib32-vulkan-mesa-layer-git: a vulkan layer to display information using an overlay')
   provides=('lib32-vulkan-radeon' 'lib32-vulkan-driver')
@@ -312,7 +318,8 @@ package_lib32-vulkan-radeon-git() {
 
 package_lib32-mesa-git() {
   pkgdesc="an open-source implementation of the OpenGL specification (32-bit) (git version)"
-  depends=('lib32-libdrm' 'lib32-libxxf86vm' 'lib32-libxdamage' 'lib32-systemd' 'lib32-libelf' 'lib32-libxshmfence' "lib32-llvm-libs-git=$LLVM32_VERSION"
+  depends=('lib32-libdrm' 'lib32-libxxf86vm' 'lib32-libxdamage' 'lib32-systemd' 'lib32-libelf' 
+           'lib32-libxshmfence' "lib32-llvm-libs-git=$LLVM32_VERSION" 'lib32-vulkan-icd-loader'
            'lib32-wayland' 'lib32-lm_sensors' 'lib32-libglvnd' 'mesa-git')
   optdepends=('opengl-man-pages: for the OpenGL API man pages')
   provides=('lib32-mesa' 'lib32-mesa-vdpau' 'lib32-mesa-libgl' 'lib32-opengl-driver')

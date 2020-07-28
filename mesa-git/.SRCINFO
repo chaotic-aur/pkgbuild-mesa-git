@@ -1,9 +1,9 @@
 pkgbase = mesa-git
 	pkgdesc = mesa trunk monolithic (git version)
-	pkgver = 20.2.0_devel.126383.fd20e986249
+	pkgver = 20.2.0_devel.126561.12dd5455f43
 	pkgrel = 1
 	epoch = 1
-	url = http://mesa3d.sourceforge.net
+	url = https://www.mesa3d.org/
 	arch = x86_64
 	groups = chaotic-mesa-git
 	license = custom
@@ -73,6 +73,9 @@ pkgbase = mesa-git
 
 pkgname = vulkan-mesa-layers-git
 	pkgdesc = Mesa's Vulkan overlay layers (git version)
+	depends = wayland
+	depends = python
+	depends = libdrm-git
 	provides = vulkan-mesa-layers
 	conflicts = vulkan-mesa-layer-git
 	conflicts = vulkan-mesa-layers
@@ -110,7 +113,8 @@ pkgname = vulkan-radeon-git
 	depends = libxshmfence
 	depends = libelf
 	depends = libdrm
-	depends = llvm-libs-git=12.0.0_r361034.bef56f7fe23
+	depends = zstd
+	depends = llvm-libs-git=12.0.0_r361531.ee7caa75939a
 	optdepends = vulkan-mesa-layer-git: a vulkan layer to display information using an overlay
 	provides = vulkan-radeon
 	provides = vulkan-driver
@@ -125,11 +129,15 @@ pkgname = mesa-git
 	depends = libxshmfence
 	depends = libsystemd
 	depends = libelf
+	depends = libxvmc
 	depends = libomxil-bellagio
 	depends = libunwind
-	depends = llvm-libs-git=12.0.0_r361034.bef56f7fe23
+	depends = llvm-libs-git=12.0.0_r361531.ee7caa75939a
 	depends = lm_sensors
 	depends = libglvnd
+	depends = vulkan-icd-loader
+	depends = libxv
+	depends = zstd
 	optdepends = opengl-man-pages: for the OpenGL API man pages
 	provides = mesa
 	provides = mesa-vdpau
@@ -144,6 +152,8 @@ pkgname = mesa-git
 pkgname = lib32-vulkan-mesa-layers-git
 	pkgdesc = Mesa's Vulkan overlay layers (32-bit) (git version)
 	depends = vulkan-mesa-layers-git
+	depends = lib32-libxcb
+	depends = lib32-wayland
 	conflicts = lib32-vulkan-mesa-layer-git
 	replaces = lib32-vulkan-mesa-layer-git
 
@@ -155,6 +165,8 @@ pkgname = lib32-vulkan-intel-git
 	depends = lib32-wayland
 	depends = lib32-libx11
 	depends = lib32-libxshmfence
+	depends = lib32-zstd
+	depends = lib32-libdrm-git
 	optdepends = lib32-vulkan-mesa-layer-git: a vulkan layer to display information using an overlay
 	provides = lib32-vulkan-intel
 	provides = lib32-vulkan-driver
@@ -166,7 +178,8 @@ pkgname = lib32-vulkan-radeon-git
 	depends = lib32-libgcrypt
 	depends = lib32-wayland
 	depends = lib32-libx11
-	depends = lib32-llvm-libs-git=12.0.0_r361034.bef56f7fe23
+	depends = lib32-zstd
+	depends = lib32-llvm-libs-git=12.0.0_r361531.ee7caa75939a
 	depends = lib32-libdrm
 	depends = lib32-libelf
 	depends = lib32-libxshmfence
@@ -183,7 +196,8 @@ pkgname = lib32-mesa-git
 	depends = lib32-systemd
 	depends = lib32-libelf
 	depends = lib32-libxshmfence
-	depends = lib32-llvm-libs-git=12.0.0_r361034.bef56f7fe23
+	depends = lib32-llvm-libs-git=12.0.0_r361531.ee7caa75939a
+	depends = lib32-vulkan-icd-loader
 	depends = lib32-wayland
 	depends = lib32-lm_sensors
 	depends = lib32-libglvnd
