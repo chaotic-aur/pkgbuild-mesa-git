@@ -50,8 +50,8 @@ if [  -d _build32 ]; then
 
 build() {
   export SAMUFLAGS="-j1"
-  export CC="clang -fuse-ld=lld"
-  export CXX="clang++ -fuse-ld=lld"
+  export CC="clang -flto -fuse-ld=lld"
+  export CXX="clang++ -flto -fuse-ld=lld"
 
   arch-meson mesa _build64 \
     -D b_lto=false \
@@ -94,8 +94,8 @@ build() {
   # outside of fakeroot but mesa doesn't need to chown/mod
   DESTDIR="$srcdir/fakeinstall_64" meson install -C _build64
 
-  export CC="clang -m32 -fuse-ld=lld -ferror-limit=0"
-  export CXX="clang++ -m32 -fuse-ld=lld -ferror-limit=0"
+  export CC="clang -m32 -fuse-ld=lld -flto -ferror-limit=0"
+  export CXX="clang++ -m32 -fuse-ld=lld -flto -ferror-limit=0"
   export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
 
   arch-meson mesa _build32 \
