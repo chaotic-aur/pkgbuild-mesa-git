@@ -88,14 +88,14 @@ build() {
 
   # Print config
   meson configure _build64
-  meson compile -j1 -C _build64
+  meson compile -C _build64
 
   # fake installation to be seperated into packages
   # outside of fakeroot but mesa doesn't need to chown/mod
   DESTDIR="$srcdir/fakeinstall_64" meson install -C _build64
 
-  export CC="clang -m32 -fuse-ld=lld -flto -ferror-limit=0"
-  export CXX="clang++ -m32 -fuse-ld=lld -flto -ferror-limit=0"
+  export CC="clang -m32 -fuse-ld=lld"
+  export CXX="clang++ -m32 -fuse-ld=lld"
   export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
 
   arch-meson mesa _build32 \
