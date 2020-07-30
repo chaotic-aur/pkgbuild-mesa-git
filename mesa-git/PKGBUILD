@@ -198,7 +198,7 @@ package_opencl-mesa-git() {
 package_vulkan-intel-git() {
   pkgdesc="Intel's Vulkan mesa driver (git version)"
   depends=('wayland' 'libx11' 'libxshmfence')
-  optdepends=('vulkan-mesa-layer-git: a vulkan layer to display information using an overlay')
+  optdepends=('vulkan-mesa-layers-git: a vulkan layer to display information using an overlay')
   provides=('vulkan-intel' 'vulkan-driver')
   conflicts=('vulkan-intel')
 
@@ -212,7 +212,7 @@ package_vulkan-intel-git() {
 package_vulkan-radeon-git() {
   pkgdesc="Radeon's Vulkan mesa driver (git version)"
   depends=('wayland' 'libx11' 'libxshmfence' 'libelf' 'libdrm' 'zstd' "llvm-libs-git=$LLVM_VERSION")
-  optdepends=('vulkan-mesa-layer-git: a vulkan layer to display information using an overlay')
+  optdepends=('vulkan-mesa-layers-git: a vulkan layer to display information using an overlay')
   provides=('vulkan-radeon' 'vulkan-driver')
   conflicts=('vulkan-radeon')
 
@@ -292,7 +292,7 @@ package_lib32-vulkan-intel-git() {
   pkgdesc="Intel's Vulkan mesa driver (32-bit) (git version)"
   depends=('vulkan-intel-git' 'lib32-gcc-libs' 'lib32-libgcrypt' 'lib32-wayland'
            'lib32-libx11' 'lib32-libxshmfence' 'lib32-zstd' 'lib32-libdrm-git')
-  optdepends=('lib32-vulkan-mesa-layer-git: a vulkan layer to display information using an overlay')
+  optdepends=('lib32-vulkan-mesa-layers-git: a vulkan layer to display information using an overlay')
   provides=('lib32-vulkan-intel' 'lib32-vulkan-driver')
   conflicts=('lib32-vulkan-intel')
 
@@ -306,7 +306,7 @@ package_lib32-vulkan-radeon-git() {
   pkgdesc="Radeon's Vulkan mesa driver (32-bit) (git version)"
   depends=('vulkan-radeon-git' 'lib32-libgcrypt' 'lib32-wayland' 'lib32-libx11' 'lib32-zstd'
            "lib32-llvm-libs-git=$LLVM32_VERSION" 'lib32-libdrm' 'lib32-libelf' 'lib32-libxshmfence')
-  optdepends=('lib32-vulkan-mesa-layer-git: a vulkan layer to display information using an overlay')
+  optdepends=('lib32-vulkan-mesa-layers-git: a vulkan layer to display information using an overlay')
   provides=('lib32-vulkan-radeon' 'lib32-vulkan-driver')
   conflicts=('lib32-vulkan-radeon')
 
