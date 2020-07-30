@@ -49,9 +49,9 @@ if [  -d _build32 ]; then
 }
 
 build() {
-  export SAMUFLAGS="-j1"
-  export CC="clang -flto -fuse-ld=lld"
-  export CXX="clang++ -flto -fuse-ld=lld"
+#  export SAMUFLAGS="-j1"
+#  export CC="clang -flto -fuse-ld=lld"
+#  export CXX="clang++ -flto -fuse-ld=lld"
 
   arch-meson mesa _build64 \
     -D b_lto=false \
