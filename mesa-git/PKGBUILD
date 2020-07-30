@@ -3,7 +3,7 @@ pkgbase=mesa-git
 pkgname=('vulkan-mesa-layers-git' 'opencl-mesa-git' 'vulkan-intel-git' 'vulkan-radeon-git' 'mesa-git' 'lib32-vulkan-mesa-layers-git' 'lib32-vulkan-intel-git' 'lib32-vulkan-radeon-git' 'lib32-mesa-git')
 pkgdesc="mesa trunk monolithic (git version)"
 epoch=1
-pkgver=20.2.0_devel.126685.b5558f2d2aa
+pkgver=20.2.0_devel.126698.e933ac21cb3
 pkgrel=1
 groups=('chaotic-mesa-git')
 arch=('x86_64')
@@ -55,7 +55,7 @@ build() {
 
   arch-meson mesa _build64 \
     -D b_lto=false \
-    -D b_ndebug=true \
+    -D b_ndebug=false \
     -D platforms=x11,wayland \
     -D dri-drivers=i915,i965,r100,r200,nouveau \
     -D gallium-drivers=r300,r600,radeonsi,nouveau,iris,zink,virgl,svga,swrast \
