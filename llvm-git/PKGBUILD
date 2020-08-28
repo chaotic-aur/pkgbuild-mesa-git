@@ -5,7 +5,7 @@
 pkgbase=llvm-git
 pkgname=('lldb-git' 'lld-git' 'polly-git' 'compiler-rt-git' 'clang-git' 'llvm-ocaml-git' 'llvm-libs-git' 'llvm-git'  'lib32-llvm-libs-git' 'lib32-llvm-git')
 pkgdesc='Low Level Virtual Machine (git version)'
-pkgver=12.0.0_r360857.ce052110ac9
+pkgver=12.0.0_r364817.73f4317ffd56
 pkgrel=1
 _ocaml_ver=4.10.0
 _pythonver=3.8
@@ -83,7 +83,6 @@ build() {
         -D CMAKE_CXX_FLAGS="$CXXFLAGS" \
         -D CMAKE_BUILD_TYPE=Release \
         -D CMAKE_INSTALL_PREFIX=/usr \
-        -D PYTHON_EXECUTABLE=/usr/bin/python \
         -D LLVM_APPEND_VC_REV=ON \
         -D LLVM_HOST_TRIPLE="$CHOST" \
         -D LLVM_ENABLE_RTTI=ON \
@@ -105,7 +104,6 @@ build() {
         -D SPHINX_WARNINGS_AS_ERRORS=OFF \
         -D LLDB_USE_SYSTEM_SIX=1 \
         -D LLVM_VERSION_SUFFIX="" \
-        -D CMAKE_POLICY_DEFAULT_CMP0075=NEW \
         -D POLLY_ENABLE_GPGPU_CODEGEN=ON \
         -D LLVM_ENABLE_PROJECTS="lldb;polly;lld;compiler-rt;clang-tools-extra;clang"
 
