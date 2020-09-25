@@ -173,7 +173,7 @@ package_lldb-git() {
      _fakeinstall_64 fakeinstall_64/usr/include/lldb
      _fakeinstall_64 fakeinstall_64/usr/lib/liblldb*
      _fakeinstall_64 fakeinstall_64/usr/lib/python"$_pythonver"/site-packages/lldb 
-     _fakeinstall_66 fakeinstall_64/usr/share/man/man1/lldb* 
+     _fakeinstall_64 fakeinstall_64/usr/share/man/man1/lldb*
     install -Dm644 "$srcdir"/llvm-project/lldb/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 
 }
@@ -191,7 +191,7 @@ package_lld-git(){
    _fakeinstall_64 fakeinstall_64/usr/bin/lld*
    _fakeinstall_64 fakeinstall_64/usr/bin/*lld
    _fakeinstall_64 fakeinstall_64/usr/bin/wasm-ld
-#   install -Dm644 "$srcdir"/llvm-project/lld/docs/ld.lld.1 "$pkgdir/usr/share/man/man1"
+   install -Dm644 "$srcdir"/llvm-project/lld/docs/ld.lld.1 "$pkgdir/usr/share/man/man1"
    install -Dm644 "$srcdir"/llvm-project/lld/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 
