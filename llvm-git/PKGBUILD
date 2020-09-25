@@ -277,7 +277,7 @@ package_clang-git() {
 package_llvm-libs-git() {
     pkgdesc="LLVM runtime libraries (git version)"
     depends=('gcc-libs' 'zlib' 'libffi' 'libedit' 'libxml2' 'ncurses')
-    provides=("llvm-libs=$pkgver")
+    provides=("llvm-libs")
     replaces=('llvm-libs-svn')  # 'llvm-libs')
     conflicts=('llvm-libs-svn') # 'llvm-libs')
 
@@ -338,7 +338,7 @@ package_llvm-git() {
 package_lib32-llvm-libs-git() {
   pkgdesc='Low Level Virtual Machine library (runtime library)(32-bit)(git version)'
   depends=('lib32-libffi' 'lib32-zlib' 'lib32-libxml2' 'lib32-gcc-libs')
-  provides=("lib32-llvm-libs=$pkgver")
+  provides=("lib32-llvm-libs")
   replaces=('lib32-llvm-libs-svn') # 'lib32-llvm-libs')
   conflicts=('lib32-llvm-libs-svn') # 'lib32-llvm-libs')
 
