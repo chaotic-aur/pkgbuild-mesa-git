@@ -5,7 +5,7 @@
 pkgbase=llvm-git
 pkgname=('lldb-git' 'lld-git' 'polly-git' 'compiler-rt-git' 'clang-git' 'llvm-ocaml-git' 'llvm-libs-git' 'llvm-git'  'lib32-llvm-libs-git' 'lib32-llvm-git')
 pkgdesc='Low Level Virtual Machine (git version)'
-pkgver=12.0.0_r365022.1a633e72f65d
+pkgver=12.0.0_r367110.38de1c33a837
 pkgrel=1
 _ocaml_ver=4.11.0
 _pythonver=3.8
@@ -90,21 +90,17 @@ build() {
         -D LLVM_BINUTILS_INCDIR=/usr/include \
         -D FFI_INCLUDE_DIR="$(pkg-config --variable=includedir libffi )" \
         -D LLVM_BUILD_LLVM_DYLIB=ON \
-        -D CLANG_LINK_CLANG_DYLIB=ON \
         -D LLVM_LINK_LLVM_DYLIB=ON \
         -D LLVM_INSTALL_UTILS=ON \
         -D LLVM_BUILD_DOCS=ON \
         -D LLVM_INCLUDE_DOCS=ON \
         -D LLVM_ENABLE_DOXYGEN=OFF \
-        -D LIBCLANG_INCLUDE_CLANG_TOOLS_EXTRA=ON \
         -D CLANG_INCLUDE_DOCS=ON \
         -D LLVM_EXPERIMENTAL_TARGETS_TO_BUILD=AVR \
         -D LLVM_ENABLE_SPHINX=ON \
         -D SPHINX_OUTPUT_HTML=OFF \
         -D SPHINX_WARNINGS_AS_ERRORS=OFF \
-        -D LLDB_USE_SYSTEM_SIX=1 \
         -D LLVM_VERSION_SUFFIX="" \
-        -D POLLY_ENABLE_GPGPU_CODEGEN=ON \
         -D LLVM_ENABLE_PROJECTS="lldb;polly;lld;compiler-rt;clang-tools-extra;clang"
 
     ninja -C _build64 LLVMgold  all ocaml_doc
@@ -119,28 +115,28 @@ build() {
     -B _build32 \
     -S llvm-project/llvm \
     -G Ninja \
-        -DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra;compiler-rt" \
-        -DCMAKE_BUILD_TYPE=Release \
-        -DCMAKE_INSTALL_PREFIX=/usr \
-        -DLLVM_LIBDIR_SUFFIX=32 \
+        -D LLVM_ENABLE_PROJECTS="clang;clang-tools-extra;compiler-rt" \
+        -D CMAKE_BUILD_TYPE=Release \
+        -D CMAKE_INSTALL_PREFIX=/usr \
+        -D LLVM_LIBDIR_SUFFIX=32 \
         -D CMAKE_C_FLAGS="$LIB32_CFLAGS" \
         -D CMAKE_CXX_FLAGS="$LIB32_CXXFLAGS" \
-        -DLLVM_TARGET_ARCH:STRING=i686 \
-        -DLLVM_HOST_TRIPLE="$CHOST" \
-        -DLLVM_DEFAULT_TARGET_TRIPLE="i686-pc-linux-gnu" \
-        -DLLVM_BINUTILS_INCDIR=/usr/include \
-        -DLLVM_BUILD_LLVM_DYLIB=ON \
-        -DLLVM_LINK_LLVM_DYLIB=ON \
-        -DLLVM_ENABLE_BINDINGS=OFF \
-        -DLLVM_ENABLE_RTTI=ON \
-        -DLLVM_ENABLE_FFI=ON \
-        -DLLVM_BUILD_TESTS=ON \
-        -DLLVM_BUILD_DOCS=OFF \
-        -DLLVM_ENABLE_SPHINX=OFF \
-        -DLLVM_ENABLE_DOXYGEN=OFF \
-        -DFFI_INCLUDE_DIR="$(pkg-config --variable=includedir libffi)" \
-        -DLLVM_BINUTILS_INCDIR=/usr/include \
-        -DLLVM_APPEND_VC_REV=ON 
+        -D LLVM_TARGET_ARCH:STRING=i686 \
+        -D LLVM_HOST_TRIPLE="$CHOST" \
+        -D LLVM_DEFAULT_TARGET_TRIPLE="i686-pc-linux-gnu" \
+        -D LLVM_BINUTILS_INCDIR=/usr/include \
+        -D LLVM_BUILD_LLVM_DYLIB=ON \
+        -D LLVM_LINK_LLVM_DYLIB=ON \
+        -D LLVM_ENABLE_BINDINGS=OFF \
+        -D LLVM_ENABLE_RTTI=ON \
+        -D LLVM_ENABLE_FFI=ON \
+        -D LLVM_BUILD_TESTS=ON \
+        -D LLVM_BUILD_DOCS=OFF \
+        -D LLVM_ENABLE_SPHINX=OFF \
+        -D LLVM_ENABLE_DOXYGEN=OFF \
+        -D FFI_INCLUDE_DIR="$(pkg-config --variable=includedir libffi)" \
+        -D LLVM_BINUTILS_INCDIR=/usr/include \
+        -D LLVM_APPEND_VC_REV=ON 
 
     ninja -C _build32 all LLVMgold
     DESTDIR="$srcdir/fakeinstall_32" ninja -C _build32 install
@@ -177,7 +173,7 @@ package_lldb-git() {
      _fakeinstall_64 fakeinstall_64/usr/include/lldb
      _fakeinstall_64 fakeinstall_64/usr/lib/liblldb*
      _fakeinstall_64 fakeinstall_64/usr/lib/python"$_pythonver"/site-packages/lldb 
-
+     _fakeinstall_66 fakeinstall_64/usr/share/man/man1/lldb* 
     install -Dm644 "$srcdir"/llvm-project/lldb/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 
 }
@@ -195,7 +191,7 @@ package_lld-git(){
    _fakeinstall_64 fakeinstall_64/usr/bin/lld*
    _fakeinstall_64 fakeinstall_64/usr/bin/*lld
    _fakeinstall_64 fakeinstall_64/usr/bin/wasm-ld
-   install -Dm644 "$srcdir"/llvm-project/lld/docs/ld.lld.1 "$pkgdir/usr/share/man/man1"
+#   install -Dm644 "$srcdir"/llvm-project/lld/docs/ld.lld.1 "$pkgdir/usr/share/man/man1"
    install -Dm644 "$srcdir"/llvm-project/lld/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 
@@ -282,8 +278,8 @@ package_llvm-libs-git() {
     pkgdesc="LLVM runtime libraries (git version)"
     depends=('gcc-libs' 'zlib' 'libffi' 'libedit' 'libxml2' 'ncurses')
     provides=("llvm-libs=$pkgver")
-    replaces=('llvm-libs-svn' 'llvm-libs')
-    conflicts=('llvm-libs-svn' 'llvm-libs')
+    replaces=('llvm-libs-svn')  # 'llvm-libs')
+    conflicts=('llvm-libs-svn') # 'llvm-libs')
 
     _fakeinstall_64 fakeinstall_64/usr/lib/libLLVM-*.so*
     _fakeinstall_64 fakeinstall_64//usr/lib/libLTO.so*
@@ -343,8 +339,8 @@ package_lib32-llvm-libs-git() {
   pkgdesc='Low Level Virtual Machine library (runtime library)(32-bit)(git version)'
   depends=('lib32-libffi' 'lib32-zlib' 'lib32-libxml2' 'lib32-gcc-libs')
   provides=("lib32-llvm-libs=$pkgver")
-  replaces=('lib32-llvm-libs-svn' 'lib32-llvm-libs')
-  conflicts=('lib32-llvm-libs-svn' 'lib32-llvm-libs')
+  replaces=('lib32-llvm-libs-svn') # 'lib32-llvm-libs')
+  conflicts=('lib32-llvm-libs-svn') # 'lib32-llvm-libs')
 
   _fakeinstall_32 fakeinstall_32/usr/lib32/libLLVM-*.so
   _fakeinstall_32 fakeinstall_32/usr/lib32/libRemarks.so.*
@@ -359,7 +355,7 @@ package_lib32-llvm-git() {
   depends=("lib32-llvm-libs-git=$pkgver" 'llvm-git')
   provides=('lib32-llvm')
   replaces=('lib32-llvm-svn' 'llvm-svn')
-  conflicts=('lib32-llvm' 'lib32-llvm-svn')
+  conflicts=('lib32-llvm-svn')
 
   _fakeinstall_32 fakeinstall_32/usr/lib32
   # Remove libs which conflict with llvm-libs
