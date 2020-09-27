@@ -19,7 +19,6 @@ pkgbase = llvm-git
 	makedepends = ocaml-findlib
 	makedepends = python-sphinx
 	makedepends = python-recommonmark
-	makedepends = clang
 	makedepends = cuda
 	makedepends = ocl-icd
 	makedepends = opencl-headers
@@ -27,6 +26,8 @@ pkgbase = llvm-git
 	makedepends = python
 	makedepends = lib32-gcc-libs
 	makedepends = lib32-libffi
+	makedepends = libunwind
+	makedepends = lib32-libunwind
 	makedepends = lib32-libxml2
 	makedepends = lib32-zlib
 	makedepends = python2
@@ -47,6 +48,13 @@ pkgname = lldb-git
 	optdepends = llvm-git: for the man file
 	provides = lldb=12.0.0_r367393.c8f6c0f961ee
 	conflicts = lldb
+
+pkgname = lld-git
+	pkgdesc = Linker from the LLVM project
+	url = https://lld.llvm.org
+	depends = llvm-libs-git=12.0.0_r367393.c8f6c0f961ee-1
+	provides = lld=12.0.0_r367393.c8f6c0f961ee
+	conflicts = lld
 
 pkgname = polly-git
 	pkgdesc = Polly is a high-level loop and data-locality optimizer and optimization infrastructure for LLVM
