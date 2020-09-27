@@ -137,8 +137,7 @@ build() {
         -D LLVM_ENABLE_DOXYGEN=OFF \
         -D FFI_INCLUDE_DIR="$(pkg-config --variable=includedir libffi)" \
         -D LLVM_BINUTILS_INCDIR=/usr/include \
-        -D LLVM_APPEND_VC_REV=ON \
-        -DTENSORFLOW_C_LIB_PATH="/usr/include/tensorflow/" 
+        -D LLVM_APPEND_VC_REV=ON 
 
     ninja -C _build32 all LLVMgold
     DESTDIR="$srcdir/fakeinstall_32" ninja -C _build32 install
