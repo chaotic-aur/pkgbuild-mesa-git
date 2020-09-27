@@ -63,7 +63,7 @@ prepare() {
     patch -Np1 -i "$srcdir"/enable-SSP-and-PIE-by-default.patch
     popd
     # llvm-project contains a lot of stuff, remove parts that aren't used by this package
-    rm -rf debuginfo-tests libclc libcxx lld libcxxabi llgo openmp parallel-libs pstl libc
+    rm -rf debuginfo-tests libclc libcxx libcxxabi llgo openmp parallel-libs pstl libc
 
     rm -rf "$srcdir"/fakeinstall*
 }
