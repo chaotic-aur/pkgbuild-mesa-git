@@ -3,7 +3,7 @@
 
 # Based on LordHeavy's LLVM
 pkgbase=llvm-git
-pkgname=('lldb-git' 'lld-git' 'polly-git' 'compiler-rt-git' 'clang-git' 'llvm-ocaml-git' 'llvm-libs-git' 'llvm-git'  'lib32-llvm-libs-git' 'lib32-llvm-git')
+pkgname=('lldb-git' 'polly-git' 'compiler-rt-git' 'clang-git' 'llvm-ocaml-git' 'llvm-libs-git' 'llvm-git'  'lib32-llvm-libs-git' 'lib32-llvm-git') #lld-git
 pkgdesc='Low Level Virtual Machine (git version)'
 pkgver=12.0.0_r367393.c8f6c0f961ee
 pkgrel=1
@@ -16,7 +16,7 @@ license=('custom:Apache 2.0 with LLVM Exception')
 makedepends=('git' 'cmake' 'ninja' 'libffi' 'libedit' 'ncurses' 'libxml2'
            'python-sphinx' 'ocaml' 'ocaml-ctypes' 'ocaml-findlib' 
             'python-sphinx' 'python-recommonmark' 'clang' 'cuda' 'ocl-icd' 'opencl-headers'
-             'swig' 'python' 'lib32-gcc-libs' 'lib32-libffi' 'libunwind' 'lib32-libunwind' 
+             'swig' 'python' 'lib32-gcc-libs' 'lib32-libffi' 
                'lib32-libxml2' 'lib32-zlib' 'python2' 'tensorflow')
 
 source=("llvm-project::git+https://github.com/llvm/llvm-project.git"
@@ -63,7 +63,7 @@ prepare() {
     patch -Np1 -i "$srcdir"/enable-SSP-and-PIE-by-default.patch
     popd
     # llvm-project contains a lot of stuff, remove parts that aren't used by this package
-    rm -rf debuginfo-tests libclc libcxx libcxxabi libunwind llgo openmp parallel-libs pstl libc
+    rm -rf debuginfo-tests libclc libcxx lld libcxxabi llgo openmp parallel-libs pstl libc
 
     rm -rf "$srcdir"/fakeinstall*
 }
@@ -101,7 +101,7 @@ build() {
         -D SPHINX_OUTPUT_HTML=OFF \
         -D SPHINX_WARNINGS_AS_ERRORS=OFF \
         -D LLVM_VERSION_SUFFIX="" \
-        -D LLVM_ENABLE_PROJECTS="lldb;polly;lld;compiler-rt;clang-tools-extra;clang" \
+        -D LLVM_ENABLE_PROJECTS="lldb;polly;compiler-rt;clang-tools-extra;clang" \ #lld
         -D TENSORFLOW_C_LIB_PATH="/usr/include/tensorflow/" 
 
     ninja -C _build64 LLVMgold  all ocaml_doc
@@ -180,22 +180,22 @@ package_lldb-git() {
 
 }
 
-package_lld-git(){
-   pkgdesc="Linker from the LLVM project"
-   url="https://lld.llvm.org"
-   depends=("llvm-libs-git=$pkgver-$pkgrel")
-   provides=("lld=$pkgver")
-   conflicts=('lld')
-
-   _fakeinstall_64 fakeinstall_64/usr/include/lld
-   _fakeinstall_64 fakeinstall_64/usr/lib/liblld*
-   _fakeinstall_64 fakeinstall_64/usr/lib/cmake/lld/
-   _fakeinstall_64 fakeinstall_64/usr/bin/lld*
-   _fakeinstall_64 fakeinstall_64/usr/bin/*lld
-   _fakeinstall_64 fakeinstall_64/usr/bin/wasm-ld
-   install -Dm644 "$srcdir"/llvm-project/lld/docs/ld.lld.1 "$pkgdir/usr/share/man/man1"
-   install -Dm644 "$srcdir"/llvm-project/lld/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
-}
+#package_lld-git(){
+#   pkgdesc="Linker from the LLVM project"
+#   url="https://lld.llvm.org"
+#   depends=("llvm-libs-git=$pkgver-$pkgrel")
+#   provides=("lld=$pkgver")
+#   conflicts=('lld')
+#
+#   _fakeinstall_64 fakeinstall_64/usr/include/lld
+#   _fakeinstall_64 fakeinstall_64/usr/lib/liblld*
+#   _fakeinstall_64 fakeinstall_64/usr/lib/cmake/lld/
+#   _fakeinstall_64 fakeinstall_64/usr/bin/lld*
+#   _fakeinstall_64 fakeinstall_64/usr/bin/*lld
+#   _fakeinstall_64 fakeinstall_64/usr/bin/wasm-ld
+#   install -Dm644 "$srcdir"/llvm-project/lld/docs/ld.lld.1 "$pkgdir/usr/share/man/man1"
+#   install -Dm644 "$srcdir"/llvm-project/lld/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+#}
 
 package_polly-git() {
     pkgdesc="Polly is a high-level loop and data-locality optimizer and optimization infrastructure for LLVM"
