@@ -281,8 +281,8 @@ package_llvm-libs-git() {
     pkgdesc="LLVM runtime libraries (git version)"
     depends=('gcc-libs' 'zlib' 'libffi' 'libedit' 'libxml2' 'ncurses')
     provides=("llvm-libs")
-    replaces=('llvm-libs-svn')# 'llvm-libs')
-    conflicts=('llvm-libs-svn')# 'llvm-libs')
+    replaces=('llvm-libs-svn') # 'llvm-libs')
+    conflicts=('llvm-libs-svn') # 'llvm-libs')
 
     _fakeinstall_64 fakeinstall_64/usr/lib/libLLVM-*.so*
     _fakeinstall_64 fakeinstall_64//usr/lib/libLTO.so*
@@ -331,7 +331,7 @@ package_llvm-git() {
   rm -rf "$pkgdir"/usr/share/doc/llvm/html/{_sources,.buildinfo}
   # Remove libs which conflict with llvm-libs
   rm -f "$pkgdir"/usr/lib/{libLLVM,libLTO,LLVMgold,libRemarks}.so
-  rm -f "$pkgdir"/usr/lib/python3.8/site-packages/six.py"
+  rm -f "$pkgdir"/usr/lib/python3.8/site-packages/six.py
 
   # make sure there are no files left to install
   find fakeinstall_64 -depth -print0 | xargs -0 rmdir
