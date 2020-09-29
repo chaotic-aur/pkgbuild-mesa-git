@@ -102,6 +102,7 @@ build() {
         -D SPHINX_WARNINGS_AS_ERRORS=OFF \
         -D POLLY_ENABLE_GPGPU_CODEGEN=ON \
         -D LLVM_VERSION_SUFFIX="" \
+        -D LLDB_USE_SYSTEM_SIX=1 \
         -D LLVM_ENABLE_PROJECTS="lldb;polly;compiler-rt;lld;clang-tools-extra;clang"
 #       -D TENSORFLOW_C_LIB_PATH="/usr/include/tensorflow/"
 
@@ -183,7 +184,7 @@ package_lldb-git() {
 package_lld-git(){
    pkgdesc="Linker from the LLVM project"
    url="https://lld.llvm.org"
-   depends=("llvm-libs-git=$pkgver-$pkgrel")
+   depends=("gcc-libs")
    provides=("lld=$pkgver")
    conflicts=('lld')
 
@@ -280,15 +281,15 @@ package_llvm-libs-git() {
     pkgdesc="LLVM runtime libraries (git version)"
     depends=('gcc-libs' 'zlib' 'libffi' 'libedit' 'libxml2' 'ncurses')
     provides=("llvm-libs")
-    replaces=('llvm-libs-svn')  # 'llvm-libs')
-    conflicts=('llvm-libs-svn') # 'llvm-libs')
+    replaces=('llvm-libs-svn')# 'llvm-libs')
+    conflicts=('llvm-libs-svn')# 'llvm-libs')
 
     _fakeinstall_64 fakeinstall_64/usr/lib/libLLVM-*.so*
     _fakeinstall_64 fakeinstall_64//usr/lib/libLTO.so*
-    _fakeinstall_64 fakeinstall_64/usr/lib/libRemarks.so.*
-    _fakeinstall_64 fakeinstall_64/usr/lib/LLVMgold.so
-    install -d "$pkgdir/usr/lib/bfd-plugins"
-    ln -s ../LLVMgold.so "$pkgdir/usr/lib/bfd-plugins/LLVMgold.so"
+  #  _fakeinstall_64 fakeinstall_64/usr/lib/libRemarks.so.*
+#  _fakeinstall_64 fakeinstall_64/usr/lib/LLVMgold.so
+#    install -d "$pkgdir/usr/lib/bfd-plugins"
+#   ln -s ../LLVMgold.so "$pkgdir/usr/lib/bfd-plugins/LLVMgold.so"
 
     install -Dm644 "$srcdir"/llvm-project/llvm/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
@@ -330,6 +331,7 @@ package_llvm-git() {
   rm -rf "$pkgdir"/usr/share/doc/llvm/html/{_sources,.buildinfo}
   # Remove libs which conflict with llvm-libs
   rm -f "$pkgdir"/usr/lib/{libLLVM,libLTO,LLVMgold,libRemarks}.so
+  rm -f "$pkgdir"/usr/lib/python3.8/site-packages/six.py"
 
   # make sure there are no files left to install
   find fakeinstall_64 -depth -print0 | xargs -0 rmdir
