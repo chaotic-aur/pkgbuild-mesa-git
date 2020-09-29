@@ -326,7 +326,7 @@ package_llvm-git() {
   python3 setup.py install --root="$pkgdir" -O1
   popd
   
-  cp $pkgdir/usr/bin/lit $pkgdir/usr/bin/llvm-lit
+  cp "$pkgdir"/usr/bin/lit "$pkgdir"/usr/bin/llvm-lit
   # Remove documentation sources
   rm -rf "$pkgdir"/usr/share/doc/llvm/html/{_sources,.buildinfo}
   # Remove libs which conflict with llvm-libs
