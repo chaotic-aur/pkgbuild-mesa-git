@@ -100,6 +100,7 @@ build() {
         -D LLVM_ENABLE_SPHINX=ON \
         -D SPHINX_OUTPUT_HTML=OFF \
         -D SPHINX_WARNINGS_AS_ERRORS=OFF \
+        -D POLLY_ENABLE_GPGPU_CODEGEN=ON \
         -D LLVM_VERSION_SUFFIX="" \
         -D LLVM_ENABLE_PROJECTS="lldb;polly;compiler-rt;lld;clang-tools-extra;clang"
 #       -D TENSORFLOW_C_LIB_PATH="/usr/include/tensorflow/"
