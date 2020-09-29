@@ -285,8 +285,8 @@ package_llvm-libs-git() {
     conflicts=('llvm-libs-svn') # 'llvm-libs')
 
     _fakeinstall_64 fakeinstall_64/usr/lib/libLLVM-*.so*
-    _fakeinstall_64 fakeinstall_64//usr/lib/libLTO.so*
-  #  _fakeinstall_64 fakeinstall_64/usr/lib/libRemarks.so.*
+#  _fakeinstall_64 fakeinstall_64//usr/lib/libLTO.so*
+    _fakeinstall_64 fakeinstall_64/usr/lib/libRemarks.so.*
 #  _fakeinstall_64 fakeinstall_64/usr/lib/LLVMgold.so
 #    install -d "$pkgdir/usr/lib/bfd-plugins"
 #   ln -s ../LLVMgold.so "$pkgdir/usr/lib/bfd-plugins/LLVMgold.so"
