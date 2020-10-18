@@ -3,8 +3,8 @@ pkgbase=mesa-git
 pkgname=('vulkan-mesa-layers-git' 'opencl-mesa-git' 'vulkan-intel-git' 'vulkan-radeon-git' 'mesa-git' 'lib32-vulkan-mesa-layers-git' 'lib32-vulkan-intel-git' 'lib32-vulkan-radeon-git' 'lib32-mesa-git')
 pkgdesc="mesa trunk monolithic (git version)"
 epoch=1
-pkgver=20.3.0_devel.127789.8239fe5d742
-pkgrel=1
+pkgver=20.3.0_devel.130101.57d317865e7
+pkgrel=2
 groups=('chaotic-mesa-git')
 arch=('x86_64')
 
@@ -211,7 +211,7 @@ package_vulkan-intel-git() {
 
 package_vulkan-radeon-git() {
   pkgdesc="Radeon's Vulkan mesa driver (git version)"
-  depends=('wayland' 'libx11' 'libxshmfence' 'libelf' 'libdrm' 'zstd' "llvm-libs-git=$LLVM_VERSION")
+  depends=('wayland' 'libx11' 'libxshmfence' 'libelf' 'libdrm' 'zstd' "llvm-libs-git")
   optdepends=('vulkan-mesa-layers-git: a vulkan layer to display information using an overlay')
   provides=('vulkan-radeon' 'vulkan-driver')
   conflicts=('vulkan-radeon')
@@ -226,7 +226,7 @@ package_mesa-git() {
   pkgdesc="an open-source implementation of the OpenGL specification (git version)"
   depends=('libdrm' 'wayland' 'libxxf86vm' 'libxdamage' 
            'libxshmfence' 'libsystemd' 'libelf' 'libxvmc'
-           'libomxil-bellagio' 'libunwind' "llvm-libs-git=$LLVM_VERSION" 
+           'libomxil-bellagio' 'libunwind' "llvm-libs-git" 
            'lm_sensors' 'libglvnd' 'vulkan-icd-loader' 'libxv' 'zstd')
   optdepends=('opengl-man-pages: for the OpenGL API man pages')
   provides=('mesa' 'mesa-vdpau' 'libva-mesa-driver' 'mesa-libgl' 'opengl-driver')
@@ -305,7 +305,7 @@ package_lib32-vulkan-intel-git() {
 package_lib32-vulkan-radeon-git() {
   pkgdesc="Radeon's Vulkan mesa driver (32-bit) (git version)"
   depends=('vulkan-radeon-git' 'lib32-libgcrypt' 'lib32-wayland' 'lib32-libx11' 'lib32-zstd'
-           "lib32-llvm-libs-git=$LLVM32_VERSION" 'lib32-libdrm' 'lib32-libelf' 'lib32-libxshmfence')
+           "lib32-llvm-libs-git" 'lib32-libdrm' 'lib32-libelf' 'lib32-libxshmfence')
   optdepends=('lib32-vulkan-mesa-layers-git: a vulkan layer to display information using an overlay')
   provides=('lib32-vulkan-radeon' 'lib32-vulkan-driver')
   conflicts=('lib32-vulkan-radeon')
@@ -319,7 +319,7 @@ package_lib32-vulkan-radeon-git() {
 package_lib32-mesa-git() {
   pkgdesc="an open-source implementation of the OpenGL specification (32-bit) (git version)"
   depends=('lib32-libdrm' 'lib32-libxxf86vm' 'lib32-libxdamage' 'lib32-systemd' 'lib32-libelf' 
-           'lib32-libxshmfence' "lib32-llvm-libs-git=$LLVM32_VERSION" 'lib32-vulkan-icd-loader'
+           'lib32-libxshmfence' "lib32-llvm-libs-git" 'lib32-vulkan-icd-loader'
            'lib32-wayland' 'lib32-lm_sensors' 'lib32-libglvnd' 'mesa-git')
   optdepends=('opengl-man-pages: for the OpenGL API man pages')
   provides=('lib32-mesa' 'lib32-mesa-vdpau' 'lib32-mesa-libgl' 'lib32-opengl-driver' 'lib32-libva-mesa-driver')
