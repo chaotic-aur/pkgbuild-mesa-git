@@ -1,6 +1,6 @@
 pkgbase = llvm-git
 	pkgdesc = Low Level Virtual Machine (git version)
-	pkgver = 12.0.0_r367393.c8f6c0f961ee
+	pkgver = 12.0.0_r374074.1c98f984105e
 	pkgrel = 1
 	url = https://llvm.org/
 	arch = x86_64
@@ -31,10 +31,8 @@ pkgbase = llvm-git
 	makedepends = lib32-libxml2
 	makedepends = lib32-zlib
 	makedepends = python2
-	makedepends = tensorflow
 	options = staticlibs
 	source = llvm-project::git+https://github.com/llvm/llvm-project.git
-	source = enable-SSP-and-PIE-by-default.patch
 	md5sums = SKIP
 	md5sums = 187ede6eb0974d5ce8deb366a857b239
 	sha512sums = SKIP
@@ -43,42 +41,42 @@ pkgbase = llvm-git
 pkgname = lldb-git
 	pkgdesc = Next generation, high-performance debugger (git version)
 	url = https://lldb.llvm.org/
-	depends = clang-git=12.0.0_r367393.c8f6c0f961ee-1
-	depends = llvm-libs-git=12.0.0_r367393.c8f6c0f961ee-1
+	depends = clang-git=12.0.0_r374074.1c98f984105e-1
+	depends = llvm-libs-git=12.0.0_r374074.1c98f984105e-1
 	optdepends = llvm-git: for the man file
-	provides = lldb=12.0.0_r367393.c8f6c0f961ee
+	provides = lldb=12.0.0_r374074.1c98f984105e
 	conflicts = lldb
 
 pkgname = lld-git
 	pkgdesc = Linker from the LLVM project
 	url = https://lld.llvm.org
-	depends = llvm-libs-git=12.0.0_r367393.c8f6c0f961ee-1
-	provides = lld=12.0.0_r367393.c8f6c0f961ee
+	depends = gcc-libs
+	provides = lld=12.0.0_r374074.1c98f984105e
 	conflicts = lld
 
 pkgname = polly-git
 	pkgdesc = Polly is a high-level loop and data-locality optimizer and optimization infrastructure for LLVM
 	url = https://polly.llvm.org/
 	arch = any
-	depends = llvm-git=12.0.0_r367393.c8f6c0f961ee-1
+	depends = llvm-git=12.0.0_r374074.1c98f984105e-1
 
 pkgname = compiler-rt-git
 	pkgdesc = Compiler runtime libraries for clang (git version)
 	url = https://compiler-rt.llvm.org/
-	depends = llvm-git=12.0.0_r367393.c8f6c0f961ee-1
+	depends = llvm-git=12.0.0_r374074.1c98f984105e-1
 	depends = gcc-libs
-	provides = compiler-rt=12.0.0_r367393.c8f6c0f961ee
+	provides = compiler-rt=12.0.0_r374074.1c98f984105e
 	conflicts = clang-svn
 
 pkgname = clang-git
 	pkgdesc = C language family frontend for LLVM (git version)
 	url = http://clang.llvm.org/
-	depends = llvm-git=12.0.0_r367393.c8f6c0f961ee-1
+	depends = llvm-git=12.0.0_r374074.1c98f984105e-1
 	depends = gcc
 	depends = python
 	depends = python2
 	optdepends = llvm-libs: for compiling with -flto
-	provides = clang=12.0.0_r367393.c8f6c0f961ee
+	provides = clang=12.0.0_r374074.1c98f984105e
 	provides = clang-analyzer
 	provides = clang-tools-extra
 	conflicts = clang
@@ -89,13 +87,14 @@ pkgname = clang-git
 	replaces = clang-svn
 	replaces = clang-analyzer-svn
 	replaces = clang-tools-extra-svn
+	replaces = clang
 
 pkgname = llvm-ocaml-git
 	pkgdesc = OCaml bindings for LLVM (git version)
-	depends = llvm-git=12.0.0_r367393.c8f6c0f961ee-1
+	depends = llvm-git=12.0.0_r374074.1c98f984105e-1
 	depends = ocaml=4.11.0
 	depends = ocaml-ctypes
-	provides = llvm-ocaml=12.0.0_r367393.c8f6c0f961ee
+	provides = llvm-ocaml=12.0.0_r374074.1c98f984105e
 	conflicts = llvm-ocaml
 	conflicts = llvm-ocaml-svn
 	replaces = llvm-ocaml-svn
@@ -114,10 +113,10 @@ pkgname = llvm-libs-git
 
 pkgname = llvm-git
 	pkgdesc = Collection of modular and reusable compiler and toolchain technologies (git version)
-	depends = llvm-libs-git=12.0.0_r367393.c8f6c0f961ee
+	depends = llvm-libs-git=12.0.0_r374074.1c98f984105e
 	depends = perl
 	optdepends = python-setuptools: for using lit (LLVM Integrated Tester)
-	provides = llvm=12.0.0_r367393.c8f6c0f961ee
+	provides = llvm=12.0.0_r374074.1c98f984105e
 	conflicts = llvm
 	conflicts = llvm-svn
 	replaces = llvm-svn
@@ -134,7 +133,7 @@ pkgname = lib32-llvm-libs-git
 
 pkgname = lib32-llvm-git
 	pkgdesc = Low Level Virtual Machine (32-bit)(git version)
-	depends = lib32-llvm-libs-git=12.0.0_r367393.c8f6c0f961ee
+	depends = lib32-llvm-libs-git=12.0.0_r374074.1c98f984105e
 	depends = llvm-git
 	provides = lib32-llvm
 	conflicts = lib32-llvm-svn

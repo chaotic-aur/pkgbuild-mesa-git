@@ -19,8 +19,7 @@ makedepends=('git' 'cmake' 'ninja' 'libffi' 'libedit' 'ncurses' 'libxml2'
              'swig' 'python' 'lib32-gcc-libs' 'lib32-libffi' 'libunwind' 'lib32-libunwind'
                'lib32-libxml2' 'lib32-zlib' 'python2' ) #tensorflow
 
-source=("llvm-project::git+https://github.com/llvm/llvm-project.git"
-        "enable-SSP-and-PIE-by-default.patch")
+source=("llvm-project::git+https://github.com/llvm/llvm-project.git")
 
 md5sums=('SKIP'
          '187ede6eb0974d5ce8deb366a857b239')
