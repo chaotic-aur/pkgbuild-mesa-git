@@ -3,8 +3,8 @@ pkgbase=mesa-git
 pkgname=('vulkan-mesa-layers-git' 'opencl-mesa-git' 'vulkan-intel-git' 'vulkan-radeon-git' 'mesa-git' 'lib32-vulkan-mesa-layers-git' 'lib32-vulkan-intel-git' 'lib32-vulkan-radeon-git' 'lib32-mesa-git')
 pkgdesc="mesa trunk monolithic (git version)"
 epoch=1
-pkgver=20.3.0_devel.130101.57d317865e7
-pkgrel=2
+pkgver=21.0.0_devel.132090.3aaac40b12b
+pkgrel=1
 groups=('chaotic-mesa-git')
 arch=('x86_64')
 
@@ -84,6 +84,7 @@ build() {
     -D osmesa=gallium \
     -D shared-glapi=enabled \
     -D valgrind=enabled \
+    -D microsoft-clc=disabled \
     -D xlib-lease=enabled
 
   # Print config
@@ -130,6 +131,7 @@ build() {
     -D lmsensors=true \
     -D osmesa=gallium \
     -D shared-glapi=true \
+    -D microsoft-clc=disabled \
     -D valgrind=true
 
   # Print config
