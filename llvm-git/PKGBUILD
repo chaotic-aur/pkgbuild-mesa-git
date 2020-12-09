@@ -204,6 +204,7 @@ package_polly-git() {
     _fakeinstall_64 fakeinstall_64/usr/lib/*Polly*
     _fakeinstall_64 fakeinstall_64/usr/lib/libGPU*
     install -Dm644 "$srcdir"/llvm-project/polly/LICENSE.txt "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+     _fakeinstall_64 fakeinstall_64/usr/share/man/man1/polly*
 }
 package_compiler-rt-git() {
   pkgdesc="Compiler runtime libraries for clang (git version)"
