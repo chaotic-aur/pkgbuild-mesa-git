@@ -5,7 +5,7 @@
 pkgbase=llvm-git
 pkgname=('lldb-git' 'lld-git' 'polly-git' 'compiler-rt-git' 'clang-git' 'llvm-ocaml-git' 'llvm-libs-git' 'llvm-git'  'lib32-llvm-libs-git' 'lib32-llvm-git') 
 pkgdesc='Low Level Virtual Machine (git version)'
-pkgver=12.0.0_r374074.1c98f984105e
+pkgver=12.0.0_r375605.3ee43adfb20d
 pkgrel=1
 groups=('chaotic-mesa-git')
 arch=('x86_64')
@@ -50,9 +50,6 @@ pkgver() {
              CMakeLists.txt)_r$(git rev-list --count HEAD).$(git rev-parse --short HEAD)
     echo "$_pkgver"
 
-  export _ocamlver=$(ocamlc --version)
-  export _pythonver=$(python -V | sed 's/.* \([0-9]\).\([0-9]\).*/\1.\2/')
-
 }
 
 prepare() {
@@ -62,6 +59,9 @@ prepare() {
     rm -rf debuginfo-tests libclc libcxx libcxxabi llgo openmp parallel-libs pstl libc
 
     rm -rf "$srcdir"/fakeinstall*
+    
+    export _ocamlver=$(ocamlc --version)
+    export _pythonver=$(python -V | sed 's/.* \([0-9]\).\([0-9]\).*/\1.\2/')
 }
 
 build() {
@@ -129,7 +129,7 @@ build() {
         -D LLVM_ENABLE_BINDINGS=OFF \
         -D LLVM_ENABLE_RTTI=ON \
         -D LLVM_ENABLE_FFI=ON \
-        -D LLVM_BUILD_TESTS=ON \
+        -D LLVM_BUILD_TESTS=OFF \
         -D LLVM_BUILD_DOCS=OFF \
         -D LLVM_ENABLE_SPHINX=OFF \
         -D LLVM_ENABLE_DOXYGEN=OFF \
