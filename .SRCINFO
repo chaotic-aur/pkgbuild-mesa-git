@@ -1,6 +1,6 @@
 pkgbase = mesa-git
 	pkgdesc = mesa trunk monolithic (git version)
-	pkgver = 21.0.0_devel.132090.3aaac40b12b
+	pkgver = 21.0.0_devel.132837.33a6c01e12c
 	pkgrel = 1
 	epoch = 1
 	url = https://www.mesa3d.org/
@@ -13,6 +13,7 @@ pkgbase = mesa-git
 	makedepends = libdrm
 	makedepends = xorgproto
 	makedepends = libxrandr
+	makedepends = valgrind
 	makedepends = libxshmfence
 	makedepends = libxxf86vm
 	makedepends = libxdamage

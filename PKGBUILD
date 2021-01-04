@@ -3,7 +3,7 @@ pkgbase=mesa-git
 pkgname=('vulkan-mesa-layers-git' 'opencl-mesa-git' 'vulkan-intel-git' 'vulkan-radeon-git' 'mesa-git' 'lib32-vulkan-mesa-layers-git' 'lib32-vulkan-intel-git' 'lib32-vulkan-radeon-git' 'lib32-mesa-git')
 pkgdesc="mesa trunk monolithic (git version)"
 epoch=1
-pkgver=21.0.0_devel.132090.3aaac40b12b
+pkgver=21.0.0_devel.132837.33a6c01e12c
 pkgrel=1
 groups=('chaotic-mesa-git')
 arch=('x86_64')
@@ -11,7 +11,7 @@ arch=('x86_64')
 LLVM_VERSION=$(pacman -Si llvm-libs-git | grep -Po '^Version +: ([^-]+)' | awk '{print $3}')
 
 LLVM32_VERSION=$(pacman -Si lib32-llvm-libs-git | grep -Po '^Version +: ([^-]+)' | awk '{print $3}')
-makedepends=('python-mako' 'libxml2' 'libx11' 'libdrm' 'xorgproto' 'libxrandr'
+makedepends=('python-mako' 'libxml2' 'libx11' 'libdrm' 'xorgproto' 'libxrandr' 'valgrind'
 	           'libxshmfence' 'libxxf86vm' 'libxdamage' 'libvdpau' 'libva' 'libxv' 'polly-git' 
              'wayland' 'wayland-protocols' 'elfutils' "llvm-git" 'systemd' 'libxvmc'
 	           'libomxil-bellagio' 'libglvnd' 'libunwind' 'lm_sensors' 'meson' 'libclc-git' 'glslang' 'valgrind' 'zstd'
@@ -57,9 +57,10 @@ build() {
     -D b_lto=true \
     -D b_ndebug=true \
     -D platforms=x11,wayland \
-    -D dri-drivers=i915,i965,r100,r200,nouveau \
-    -D gallium-drivers=r300,r600,radeonsi,nouveau,iris,zink,virgl,svga,swrast \
+    -D dri-drivers=i965,r100,r200,nouveau \
+    -D gallium-drivers=r300,r600,i915,radeonsi,nouveau,iris,zink,virgl,svga,swrast \
     -D vulkan-drivers=amd,intel \
+    -D opencl-native=true \
     -D vulkan-overlay-layer=true \
     -D vulkan-device-select-layer=true \
     -D swr-arches=avx,avx2 \
@@ -81,7 +82,7 @@ build() {
     -D libunwind=enabled \
     -D llvm=enabled \
     -D lmsensors=enabled \
-    -D osmesa=gallium \
+    -D osmesa=true \
     -D shared-glapi=enabled \
     -D valgrind=enabled \
     -D microsoft-clc=disabled \
@@ -102,8 +103,8 @@ build() {
   arch-meson mesa _build32 \
     --native-file llvm32.native \
     --libdir=/usr/lib32 \
-    -D b_lto=false \
-    -D b_ndebug=false \
+    -D b_lto=true \
+    -D b_ndebug=true \
     -D platforms=x11,wayland \
     -D dri-drivers=i915,i965,r100,r200,nouveau \
     -D gallium-drivers=r300,r600,radeonsi,nouveau,iris,zink,virgl,svga,swrast \
@@ -117,22 +118,22 @@ build() {
     -D gallium-nine=true \
     -D gallium-omx=disabled \
     -D gallium-opencl=disabled \
-    -D gallium-va=true \
-    -D gallium-vdpau=true \
-    -D gallium-xa=true \
-    -D gallium-xvmc=false \
-    -D gbm=true \
-    -D gles1=false \
-    -D gles2=true \
+    -D gallium-va=enabled \
+    -D gallium-vdpau=enabled \
+    -D gallium-xa=enabled \
+    -D gallium-xvmc=disabled \
+    -D gbm=enabled \
+    -D gles1=disabled \
+    -D gles2=enabled \
     -D glvnd=true \
     -D glx=dri \
-    -D libunwind=false \
-    -D llvm=true \
-    -D lmsensors=true \
-    -D osmesa=gallium \
-    -D shared-glapi=true \
+    -D libunwind=disabled \
+    -D llvm=enabled \
+    -D lmsensors=enabled \
+    -D osmesa=true \
+    -D shared-glapi=enabled \
     -D microsoft-clc=disabled \
-    -D valgrind=true
+    -D valgrind=enabled
 
   # Print config
   meson configure _build32
@@ -156,13 +157,13 @@ _install_64() {
 }
 
 _install_32 () {
-         local src f dir
-         for src; do
-         f="${src#fakeinstall_32/}"
-         dir="$pkgdir/${f%/*}"
-         install -m755 -d "$dir"
-         mv -v "$src" "$dir/"
-       done
+  local src f dir
+  for src; do
+    f="${src#fakeinstall_32/}"
+    dir="$pkgdir/${f%/*}"
+    install -m755 -d "$dir"
+    mv -v "$src" "$dir/"
+  done
 }
 package_vulkan-mesa-layers-git() {
   pkgdesc="Mesa's Vulkan overlay layers (git version)"
