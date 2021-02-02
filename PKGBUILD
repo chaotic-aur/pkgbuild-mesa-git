@@ -3,7 +3,7 @@ pkgbase=mesa-git
 pkgname=('vulkan-mesa-layers-git' 'opencl-mesa-git' 'vulkan-intel-git' 'vulkan-radeon-git' 'mesa-git' 'lib32-vulkan-mesa-layers-git' 'lib32-vulkan-intel-git' 'lib32-vulkan-radeon-git' 'lib32-mesa-git')
 pkgdesc="mesa trunk monolithic (git version)"
 epoch=1
-pkgver=21.0.0_devel.132837.33a6c01e12c
+pkgver=21.1.0_devel.134498.d49b0fa72fb
 pkgrel=1
 groups=('chaotic-mesa-git')
 arch=('x86_64')
@@ -18,7 +18,7 @@ makedepends=('python-mako' 'libxml2' 'libx11' 'libdrm' 'xorgproto' 'libxrandr' '
 	           'vulkan-icd-loader' 'git' 'python-mako' 'lib32-libxml2' 'lib32-expat' 'lib32-libx11' 'lib32-libdrm' 'xorgproto'
              'lib32-libxrandr' 'lib32-libxshmfence' 'lib32-libxxf86vm' 'lib32-libxdamage' 'gcc-multilib' 'lib32-libelf' 'lib32-llvm-git'
              'lib32-systemd' 'lib32-libvdpau' 'lib32-libva' 'lib32-wayland' 'wayland-protocols' 'lib32-libglvnd' 'lib32-lm_sensors' 
-             'meson' 'glslang' 'valgrind' 'lib32-vulkan-icd-loader' 'lib32-zstd' 'clang-git' 'lld-git'
+             'meson' 'glslang' 'valgrind' 'lib32-vulkan-icd-loader' 'lib32-zstd' 'clang-git' 'lld-git' 'libselinux'
 
 )
 url="https://www.mesa3d.org/"
@@ -86,7 +86,8 @@ build() {
     -D shared-glapi=enabled \
     -D valgrind=enabled \
     -D microsoft-clc=disabled \
-    -D xlib-lease=enabled
+    -D xlib-lease=enabled \
+    -D selinux=true
 
   # Print config
   meson configure _build64
@@ -133,7 +134,8 @@ build() {
     -D osmesa=true \
     -D shared-glapi=enabled \
     -D microsoft-clc=disabled \
-    -D valgrind=enabled
+    -D valgrind=enabled \
+    -D selinux=true
 
   # Print config
   meson configure _build32
