@@ -1,69 +1,48 @@
-#Maintainer: Solomon Choina <shlomochoina@gmail.com>
+# Maintainer: Laurent Carlier <lordheavym@gmail.com>
+# Maintainer: Solomon Choina <shlomochoina@gmail.com>
+# Contributor: Jan de Groot <jgc@archlinux.org>
+# Contributor: Andreas Radke <andyrtr@archlinux.org>
+
 pkgbase=mesa-git
-pkgname=('vulkan-mesa-layers-git' 'opencl-mesa-git' 'vulkan-intel-git' 'vulkan-radeon-git' 'mesa-git' 'lib32-vulkan-mesa-layers-git' 'lib32-vulkan-intel-git' 'lib32-vulkan-radeon-git' 'lib32-mesa-git')
-pkgdesc="mesa trunk monolithic (git version)"
+pkgname=('vulkan-mesa-layers-git' 'opencl-mesa-git' 'vulkan-intel-git' 'vulkan-radeon-git' 'vulkan-swrast-git' 'mesa-git')
+pkgdesc="mesa trunk (git version)"
 epoch=1
-pkgver=21.1.0_devel.134498.d49b0fa72fb
+pkgver=21.1.0_devel.137762.b4a66b29cd6
 pkgrel=1
 groups=('chaotic-mesa-git')
 arch=('x86_64')
 
 LLVM_VERSION=$(pacman -Si llvm-libs-git | grep -Po '^Version +: ([^-]+)' | awk '{print $3}')
 
-LLVM32_VERSION=$(pacman -Si lib32-llvm-libs-git | grep -Po '^Version +: ([^-]+)' | awk '{print $3}')
 makedepends=('python-mako' 'libxml2' 'libx11' 'libdrm' 'xorgproto' 'libxrandr' 'valgrind'
-	           'libxshmfence' 'libxxf86vm' 'libxdamage' 'libvdpau' 'libva' 'libxv' 'polly-git' 
-             'wayland' 'wayland-protocols' 'elfutils' "llvm-git" 'systemd' 'libxvmc'
-	           'libomxil-bellagio' 'libglvnd' 'libunwind' 'lm_sensors' 'meson' 'libclc-git' 'glslang' 'valgrind' 'zstd'
-	           'vulkan-icd-loader' 'git' 'python-mako' 'lib32-libxml2' 'lib32-expat' 'lib32-libx11' 'lib32-libdrm' 'xorgproto'
-             'lib32-libxrandr' 'lib32-libxshmfence' 'lib32-libxxf86vm' 'lib32-libxdamage' 'gcc-multilib' 'lib32-libelf' 'lib32-llvm-git'
-             'lib32-systemd' 'lib32-libvdpau' 'lib32-libva' 'lib32-wayland' 'wayland-protocols' 'lib32-libglvnd' 'lib32-lm_sensors' 
-             'meson' 'glslang' 'valgrind' 'lib32-vulkan-icd-loader' 'lib32-zstd' 'clang-git' 'lld-git' 'libselinux'
-
-)
-url="https://www.mesa3d.org/"
+	     'libxshmfence' 'libxxf86vm' 'libxdamage' 'libvdpau' 'libva' 'libxv' 'polly-git' 'wayland' 'wayland-protocols' 'elfutils' 'llvm-git' 'systemd' 'libxvmc'
+	     'libomxil-bellagio' 'libglvnd' 'libunwind' 'lm_sensors' 'meson' 'libclc-git' 'clang-git' 'glslang' 'zstd' 'vulkan-icd-loader' 'git')
+url="https://mesa3d.org"
 license=('custom')
 source=('mesa::git+https://gitlab.freedesktop.org/mesa/mesa.git'
-        'LICENSE'
-        'llvm32.native')
+        'LICENSE')
+
 sha256sums=('SKIP'
-            '7052ba73bb07ea78873a2431ee4e828f4e72bda7d176d07f770fa48373dec537'
-            '3ea259740141b862e152e07c58f05cad539680541dc181a7233be0c93414e6fb')
+            '7fdc119cf53c8ca65396ea73f6d10af641ba41ea1dd2bd44a824726e01c8b3f2')
 
 pkgver() {
-  cd "$srcdir"/mesa
+  cd ${srcdir}/mesa
 
   read -r _ver <VERSION
-  echo "${_ver/-/_}.$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
-}
-
-prepare() {
-if [  -d _build64 ]; then
-        rm -rf _build64
-    fi
-if [  -d _build32 ]; then
-        rm -rf _build32
-    fi
-
-  cd "$srcdir"/mesa
+  echo ${_ver/-/_}.$(git rev-list --count HEAD).$(git rev-parse --short HEAD)
 }
 
 build() {
-#  export SAMUFLAGS="-j1"
-#  export CC="clang -flto -fuse-ld=lld"
-#  export CXX="clang++ -flto -fuse-ld=lld"
-
-  arch-meson mesa _build64 \
+  arch-meson mesa build \
     -D b_lto=true \
     -D b_ndebug=true \
     -D platforms=x11,wayland \
-    -D dri-drivers=i965,r100,r200,nouveau \
-    -D gallium-drivers=r300,r600,i915,radeonsi,nouveau,iris,zink,virgl,svga,swrast \
-    -D vulkan-drivers=amd,intel \
-    -D opencl-native=true \
-    -D vulkan-overlay-layer=true \
-    -D vulkan-device-select-layer=true \
+    -D dri-drivers=i915,i965,r100,r200,nouveau \
+    -D gallium-drivers=r300,r600,radeonsi,nouveau,iris,zink,virgl,svga,swrast \
+    -D vulkan-drivers=amd,intel,swrast \
+    -D vulkan-layers=device-select,intel-nullhw,overlay \
     -D swr-arches=avx,avx2 \
+    -D opencl-native=true \
     -D dri3=enabled \
     -D egl=enabled \
     -D gallium-extra-hud=true \
@@ -84,280 +63,144 @@ build() {
     -D lmsensors=enabled \
     -D osmesa=true \
     -D shared-glapi=enabled \
-    -D valgrind=enabled \
     -D microsoft-clc=disabled \
-    -D xlib-lease=enabled \
-    -D selinux=true
+    -D valgrind=enabled \
+    -D zstd=enabled \
+    -D xlib-lease=enabled
 
   # Print config
-  meson configure _build64
-  meson compile -C _build64
+  meson configure build
+
+  ninja -C build
 
   # fake installation to be seperated into packages
   # outside of fakeroot but mesa doesn't need to chown/mod
-  DESTDIR="$srcdir/fakeinstall_64" meson install -C _build64
-
-  export CC="gcc -m32"
-  export CXX="g++ -m32"
-  export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
-
-  arch-meson mesa _build32 \
-    --native-file llvm32.native \
-    --libdir=/usr/lib32 \
-    -D b_lto=true \
-    -D b_ndebug=true \
-    -D platforms=x11,wayland \
-    -D dri-drivers=i915,i965,r100,r200,nouveau \
-    -D gallium-drivers=r300,r600,radeonsi,nouveau,iris,zink,virgl,svga,swrast \
-    -D vulkan-drivers=amd,intel \
-    -D vulkan-overlay-layer=true \
-    -D vulkan-device-select-layer=true \
-    -D swr-arches=avx,avx2 \
-    -D dri3=true \
-    -D egl=true \
-    -D gallium-extra-hud=true \
-    -D gallium-nine=true \
-    -D gallium-omx=disabled \
-    -D gallium-opencl=disabled \
-    -D gallium-va=enabled \
-    -D gallium-vdpau=enabled \
-    -D gallium-xa=enabled \
-    -D gallium-xvmc=disabled \
-    -D gbm=enabled \
-    -D gles1=disabled \
-    -D gles2=enabled \
-    -D glvnd=true \
-    -D glx=dri \
-    -D libunwind=disabled \
-    -D llvm=enabled \
-    -D lmsensors=enabled \
-    -D osmesa=true \
-    -D shared-glapi=enabled \
-    -D microsoft-clc=disabled \
-    -D valgrind=enabled \
-    -D selinux=true
-
-  # Print config
-  meson configure _build32
-
-  meson compile -C _build32
-
-  # fake installation to be seperated into packages
-  # outside of fakeroot but mesa doesn't need to chown/mod
-  DESTDIR="$srcdir/fakeinstall_32" meson install -C _build32
-
+  DESTDIR="${srcdir}/fakeinstall" ninja -C build install
 }
 
-_install_64() {
+_install() {
   local src f dir
   for src; do
-    f="${src#fakeinstall_64/}"
-    dir="$pkgdir/${f%/*}"
-    install -m755 -d "$dir"
-    mv -v "$src" "$dir/"
+    f="${src#fakeinstall/}"
+    dir="${pkgdir}/${f%/*}"
+    install -m755 -d "${dir}"
+    mv -v "${src}" "${dir}/"
   done
 }
 
-_install_32 () {
-  local src f dir
-  for src; do
-    f="${src#fakeinstall_32/}"
-    dir="$pkgdir/${f%/*}"
-    install -m755 -d "$dir"
-    mv -v "$src" "$dir/"
-  done
-}
 package_vulkan-mesa-layers-git() {
   pkgdesc="Mesa's Vulkan overlay layers (git version)"
   provides=('vulkan-mesa-layers')
-  depends=('wayland' 'python' 'libdrm-git')
   conflicts=('vulkan-mesa-layer-git' 'vulkan-mesa-layers')
   replaces=('vulkan-mesa-layer-git')
+  
+  _install fakeinstall/usr/share/vulkan/explicit_layer.d
+  _install fakeinstall/usr/share/vulkan/implicit_layer.d
 
-  _install_64 fakeinstall_64/usr/share/vulkan/explicit_layer.d
-  _install_64 fakeinstall_64/usr/share/vulkan/implicit_layer.d
+  _install fakeinstall/usr/lib/libVkLayer_*.so
+  _install fakeinstall/usr/bin/mesa-overlay-control.py
 
-  _install_64 fakeinstall_64/usr/lib/libVkLayer_MESA_overlay.so
-  _install_64 fakeinstall_64/usr/lib/libVkLayer_MESA_device_select.so
-
-  _install_64 fakeinstall_64/usr/bin/mesa-overlay-control.py
-
-  install -m644 -Dt "$pkgdir/usr/share/licenses/$pkgname" LICENSE
+  install -m644 -Dt "${pkgdir}/usr/share/licenses/${pkgname}" LICENSE
 }
 
 package_opencl-mesa-git() {
   pkgdesc="OpenCL support for mesa drivers (git version)"
-  depends=('mesa-git' 'expat' 'libdrm' 'libelf' 'lm_sensors'
-           'libunwind' 'libclc-git' 'clang-git')
+  depends=('libdrm' 'libclc-git' 'clang-git')
   optdepends=('opencl-headers: headers necessary for OpenCL development')
   provides=('opencl-mesa' 'opencl-driver')
   conflicts=('opencl-mesa')
+  
+  _install fakeinstall/etc/OpenCL
+  _install fakeinstall/usr/lib/lib*OpenCL*
+  _install fakeinstall/usr/lib/gallium-pipe
 
-  _install_64 fakeinstall_64/etc/OpenCL
-  _install_64 fakeinstall_64/usr/lib/lib*OpenCL*
-  _install_64 fakeinstall_64/usr/lib/gallium-pipe
-
-  install -m644 -Dt "$pkgdir/usr/share/licenses/$pkgname" LICENSE
+  install -m644 -Dt "${pkgdir}/usr/share/licenses/${pkgname}" LICENSE
 }
 
 package_vulkan-intel-git() {
   pkgdesc="Intel's Vulkan mesa driver (git version)"
-  depends=('wayland' 'libx11' 'libxshmfence')
-  optdepends=('vulkan-mesa-layers-git: a vulkan layer to display information using an overlay')
+  depends=('wayland' 'libx11' 'libxshmfence' 'libdrm' 'zstd')
+  optdepends=('vulkan-mesa-layer-git: additional vulkan layers')
   provides=('vulkan-intel' 'vulkan-driver')
   conflicts=('vulkan-intel')
+  
+  _install fakeinstall/usr/share/vulkan/icd.d/intel_icd*.json
+  _install fakeinstall/usr/lib/libvulkan_intel.so
 
-  _install_64 fakeinstall_64/usr/share/vulkan/icd.d/intel_icd*.json
-  _install_64 fakeinstall_64/usr/lib/libvulkan_intel.so
-  _install_64 fakeinstall_64/usr/include/vulkan/vulkan_intel.h
-
-  install -m644 -Dt "$pkgdir/usr/share/licenses/$pkgname" LICENSE
+  install -m644 -Dt "${pkgdir}/usr/share/licenses/${pkgname}" LICENSE
 }
 
 package_vulkan-radeon-git() {
   pkgdesc="Radeon's Vulkan mesa driver (git version)"
-  depends=('wayland' 'libx11' 'libxshmfence' 'libelf' 'libdrm' 'zstd' "llvm-libs-git")
-  optdepends=('vulkan-mesa-layers-git: a vulkan layer to display information using an overlay')
+  depends=('wayland' 'libx11' 'libxshmfence' 'libelf' 'libdrm' 'llvm-libs-git')
+  optdepends=('vulkan-mesa-layer-git: additional vulkan layers')
   provides=('vulkan-radeon' 'vulkan-driver')
   conflicts=('vulkan-radeon')
+  
+  _install fakeinstall/usr/share/vulkan/icd.d/radeon_icd*.json
+  _install fakeinstall/usr/lib/libvulkan_radeon.so
 
-  _install_64 fakeinstall_64/usr/share/vulkan/icd.d/radeon_icd*.json
-  _install_64 fakeinstall_64/usr/lib/libvulkan_radeon.so
+  install -m644 -Dt "${pkgdir}/usr/share/licenses/${pkgname}" LICENSE
+}
 
-  install -m644 -Dt "$pkgdir/usr/share/licenses/$pkgname" LICENSE
+package_vulkan-swrast-git() {
+  pkgdesc="Vulkan software rasteriser driver (git version)"
+  depends=('wayland' 'libx11' 'libxshmfence' 'libdrm' 'zstd' 'llvm-libs-git')
+  optdepends=('vulkan-mesa-layers-git: additional vulkan layers')
+  provides=('vulkan-swrast' 'vulkan-driver')
+  conflicts=('vulkan-swrast' 'vulkan-mesa-git')
+  replaces=('vulkan-mesa-git')
+
+  _install fakeinstall/usr/share/vulkan/icd.d/lvp_icd*.json
+  _install fakeinstall/usr/lib/libvulkan_lvp.so
+
+  install -m644 -Dt "${pkgdir}/usr/share/licenses/${pkgname}" LICENSE
 }
 
 package_mesa-git() {
   pkgdesc="an open-source implementation of the OpenGL specification (git version)"
-  depends=('libdrm' 'wayland' 'libxxf86vm' 'libxdamage' 
-           'libxshmfence' 'libsystemd' 'libelf' 'libxvmc'
-           'libomxil-bellagio' 'libunwind' "llvm-libs-git" 
-           'lm_sensors' 'libglvnd' 'vulkan-icd-loader' 'libxv' 'zstd')
+  depends=('libdrm' 'wayland' 'libxxf86vm' 'libxdamage' 'libxshmfence' 'libsystemd' 'libelf'
+           'libomxil-bellagio' 'libunwind' 'llvm-libs-git' 'lm_sensors' 'libglvnd')
   optdepends=('opengl-man-pages: for the OpenGL API man pages')
   provides=('mesa' 'mesa-vdpau' 'libva-mesa-driver' 'mesa-libgl' 'opengl-driver')
   conflicts=('mesa' 'mesa-vdpau' 'libva-mesa-driver' 'mesa-libgl')
 
   # libva-mesa-driver
-  _install_64 fakeinstall_64/usr/lib/dri/*_drv_video.so
+  _install fakeinstall/usr/lib/dri/*_drv_video.so
   # mesa-vdpau
-  _install_64 fakeinstall_64/usr/lib/vdpau
-
-  _install_64 fakeinstall_64/usr/share/drirc.d/00-mesa-defaults.conf
-  _install_64 fakeinstall_64/usr/share/glvnd/egl_vendor.d/50_mesa.json
+  _install fakeinstall/usr/lib/vdpau
+ 
+  _install fakeinstall/usr/share/drirc.d/00-mesa-defaults.conf
+  _install fakeinstall/usr/share/glvnd/egl_vendor.d/50_mesa.json
 
   # ati-dri, nouveau-dri, intel-dri, svga-dri, swrast
-  _install_64 fakeinstall_64/usr/lib/dri/*_dri.so
-
-  _install_64 fakeinstall_64/usr/lib/bellagio
-  _install_64 fakeinstall_64/usr/lib/d3d
-  _install_64 fakeinstall_64/usr/lib/lib{gbm,glapi}.so*
-  _install_64 fakeinstall_64/usr/lib/libOSMesa.so*
-  _install_64 fakeinstall_64/usr/lib/libxatracker.so*
+  _install fakeinstall/usr/lib/dri/*_dri.so
+   
+  _install fakeinstall/usr/lib/bellagio
+  _install fakeinstall/usr/lib/d3d
+  _install fakeinstall/usr/lib/lib{gbm,glapi}.so*
+  _install fakeinstall/usr/lib/libOSMesa.so*
+  _install fakeinstall/usr/lib/libxatracker.so*
   # _install fakeinstall/usr/lib/libswrAVX*.so*
 
   # in vulkan-headers
-  rm -rv fakeinstall_64/usr/include/vulkan
+  rm -rfv fakeinstall/usr/include/vulkan
 
-  _install_64 fakeinstall_64/usr/include
-  _install_64 fakeinstall_64/usr/lib/pkgconfig
+  _install fakeinstall/usr/include
+  _install fakeinstall/usr/lib/pkgconfig
 
   # libglvnd support
-  _install_64 fakeinstall_64/usr/lib/libGLX_mesa.so*
-  _install_64 fakeinstall_64/usr/lib/libEGL_mesa.so*
+  _install fakeinstall/usr/lib/libGLX_mesa.so*
+  _install fakeinstall/usr/lib/libEGL_mesa.so*
 
 # Video Acceleration
-  _install_64 fakeinstall_64/usr/lib/libXvMC*
-  # indirect rendering
-  ln -s /usr/lib/libGLX_mesa.so.0 "$pkgdir/usr/lib/libGLX_indirect.so.0"
-
-  # make sure there are no files left to install
-  find fakeinstall_64 -depth -print0 | xargs -0 rmdir
-
-  install -m644 -Dt "$pkgdir/usr/share/licenses/$pkgname" LICENSE
-}
-
-package_lib32-vulkan-mesa-layers-git() {
-  pkgdesc="Mesa's Vulkan overlay layers (32-bit) (git version)"
-  depends=('vulkan-mesa-layers-git' 'lib32-libxcb' 'lib32-wayland')
-  conflicts=('lib32-vulkan-mesa-layer-git')
-  replaces=('lib32-vulkan-mesa-layer-git')
-
-  rm -rv fakeinstall_32/usr/share/vulkan/explicit_layer.d
-  rm -rv fakeinstall_32/usr/share/vulkan/implicit_layer.d
-
-  _install_32 fakeinstall_32/usr/lib32/libVkLayer_MESA_overlay.so
-  _install_32 fakeinstall_32/usr/lib32/libVkLayer_MESA_device_select.so
-
-  rm -rv fakeinstall_32/usr/bin/mesa-overlay-control.py
-
-  install -m644 -Dt "$pkgdir/usr/share/licenses/$pkgname" LICENSE
-}
-
-package_lib32-vulkan-intel-git() {
-  pkgdesc="Intel's Vulkan mesa driver (32-bit) (git version)"
-  depends=('vulkan-intel-git' 'lib32-gcc-libs' 'lib32-libgcrypt' 'lib32-wayland'
-           'lib32-libx11' 'lib32-libxshmfence' 'lib32-zstd' 'lib32-libdrm-git')
-  optdepends=('lib32-vulkan-mesa-layers-git: a vulkan layer to display information using an overlay')
-  provides=('lib32-vulkan-intel' 'lib32-vulkan-driver')
-  conflicts=('lib32-vulkan-intel')
-
-  _install_32 fakeinstall_32/usr/share/vulkan/icd.d/intel_icd*.json
-  _install_32 fakeinstall_32/usr/lib32/libvulkan_intel.so
-
-  install -m644 -Dt "$pkgdir/usr/share/licenses/$pkgname" LICENSE
-}
-
-package_lib32-vulkan-radeon-git() {
-  pkgdesc="Radeon's Vulkan mesa driver (32-bit) (git version)"
-  depends=('vulkan-radeon-git' 'lib32-libgcrypt' 'lib32-wayland' 'lib32-libx11' 'lib32-zstd'
-           "lib32-llvm-libs-git" 'lib32-libdrm' 'lib32-libelf' 'lib32-libxshmfence')
-  optdepends=('lib32-vulkan-mesa-layers-git: a vulkan layer to display information using an overlay')
-  provides=('lib32-vulkan-radeon' 'lib32-vulkan-driver')
-  conflicts=('lib32-vulkan-radeon')
-
-  _install_32 fakeinstall_32/usr/share/vulkan/icd.d/radeon_icd*.json
-  _install_32 fakeinstall_32/usr/lib32/libvulkan_radeon.so
-
-  install -m644 -Dt "$pkgdir/usr/share/licenses/$pkgname" LICENSE
-}
-
-package_lib32-mesa-git() {
-  pkgdesc="an open-source implementation of the OpenGL specification (32-bit) (git version)"
-  depends=('lib32-libdrm' 'lib32-libxxf86vm' 'lib32-libxdamage' 'lib32-systemd' 'lib32-libelf' 
-           'lib32-libxshmfence' "lib32-llvm-libs-git" 'lib32-vulkan-icd-loader'
-           'lib32-wayland' 'lib32-lm_sensors' 'lib32-libglvnd' 'mesa-git')
-  optdepends=('opengl-man-pages: for the OpenGL API man pages')
-  provides=('lib32-mesa' 'lib32-mesa-vdpau' 'lib32-mesa-libgl' 'lib32-opengl-driver' 'lib32-libva-mesa-driver')
-  conflicts=('lib32-mesa' 'lib32-mesa-vdpau' 'lib32-mesa-libgl' 'lib32-libva-mesa-driver')
-
-  # lib32-libva-mesa-driver
-  _install_32 fakeinstall_32/usr/lib32/dri/*_drv_video.so
-  # lib32-mesa-vdpau
-  _install_32 fakeinstall_32/usr/lib32/vdpau
-
-  # ati-dri, nouveau-dri, intel-dri, svga-dri, swrast
-  _install_32 fakeinstall_32/usr/lib32/dri/*_dri.so
-
-  _install_32 fakeinstall_32/usr/lib32/d3d
-  _install_32 fakeinstall_32/usr/lib32/lib{gbm,glapi}.so*
-  _install_32 fakeinstall_32/usr/lib32/libOSMesa.so*
-  _install_32 fakeinstall_32/usr/lib32/libxatracker.so*
-  _install_32 fakeinstall_32/usr/lib32/pkgconfig
-
-  # libglvnd support
-  _install_32 fakeinstall_32/usr/lib32/libGLX_mesa.so*
-  _install_32 fakeinstall_32/usr/lib32/libEGL_mesa.so*
+  _install fakeinstall/usr/lib/libXvMC*
 
   # indirect rendering
-  ln -s /usr/lib32/libGLX_mesa.so.0 "$pkgdir/usr/lib32/libGLX_indirect.so.0"
-
-  rm -rv fakeinstall_32/usr/share/drirc.d
-  rm -rv fakeinstall_32/usr/include
-  rm -rv fakeinstall_32/usr/share
+  ln -s /usr/lib/libGLX_mesa.so.0 "${pkgdir}/usr/lib/libGLX_indirect.so.0"
 
   # make sure there are no files left to install
-  find fakeinstall_32 -depth -print0 | xargs -0 rmdir
-
-  install -m644 -Dt "$pkgdir/usr/share/licenses/$pkgname" LICENSE
+  find fakeinstall -depth -print0 | xargs -0 rmdir
+  
+  install -m644 -Dt "${pkgdir}/usr/share/licenses/${pkgname}" LICENSE
 }
-
