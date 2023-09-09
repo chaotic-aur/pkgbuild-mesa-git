@@ -17,8 +17,8 @@ makedepends=('python-mako' 'libxml2' 'libx11' 'libdrm' 'xorgproto' 'libxrandr' '
              'polly-git' 'wayland' 'wayland-protocols' 'elfutils' 'llvm-git' 'llvm-libs-git' 'systemd' 'libsystemd'
 	     'libomxil-bellagio' 'libglvnd' 'libunwind' 'lm_sensors' 'libxvmc'
              'libepoxy' 'gtk3' 'python-ply'
-             'meson' 'libclc-git' 'clang-git' 'glslang' 'zstd' 'vulkan-icd-loader' 'git' 'directx-headers' 'spirv-llvm-translator-git')
-makedepends+=('rust-nightly' 'spirv-tools' 'rust-bindgen')
+             'meson' 'libclc-git' 'clang-git' 'glslang' 'zstd' 'vulkan-icd-loader' 'git' 'directx-headers')
+makedepends+=('rust-nightly' 'spirv-tools' 'rust-bindgen' 'spirv-llvm-translator-git')
 url="https://mesa3d.org"
 license=('custom')
 source=('mesa::git+https://gitlab.freedesktop.org/mesa/mesa.git'
@@ -219,25 +219,24 @@ package_mesa-git() {
   # ati-dri, nouveau-dri, intel-dri, svga-dri, swrast
   _install fakeinstall/"$_libdir"/dri/*_dri.so
 
-  _install fakeinstall/usr/lib/bellagio
-  _install fakeinstall/usr/lib/d3d
-  _install fakeinstall/usr/lib/lib{gbm,glapi}.so*
-  _install fakeinstall/usr/lib/libOSMesa.so*
-  _install fakeinstall/usr/lib/libxatracker.so*
-  # _install fakeinstall/usr/lib/libswrAVX*.so*
+  _install fakeinstall/"$_libdir"/bellagio
+  _install fakeinstall/"$_libdir"/d3d
+  _install fakeinstall/"$_libdir"/lib{gbm,glapi}.so*
+  _install fakeinstall/"$_libdir"/libOSMesa.so*
+  _install fakeinstall/"$_libdir"/libxatracker.so*
 
   # in vulkan-headers
   rm -rfv fakeinstall/usr/include/vulkan
 
   _install fakeinstall/usr/include
-  _install fakeinstall/usr/lib/pkgconfig
+  _install fakeinstall/"$_libdir"/pkgconfig
 
   # libglvnd support
-  _install fakeinstall/usr/lib/libGLX_mesa.so*
-  _install fakeinstall/usr/lib/libEGL_mesa.so*
+  _install fakeinstall/"$_libdir"/libGLX_mesa.so*
+  _install fakeinstall/"$_libdir"/libEGL_mesa.so*
 
   # indirect rendering
-  ln -s /usr/lib/libGLX_mesa.so.0 "$pkgdir/usr/lib/libGLX_indirect.so.0"
+  ln -s /"$_libdir"/libGLX_mesa.so.0 "$pkgdir/"$_libdir"/libGLX_indirect.so.0"
 
   # make sure there are no files left to install
   find fakeinstall -depth -print0 | xargs -0 rmdir
