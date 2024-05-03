@@ -4,10 +4,18 @@
 # Contributor: Andreas Radke <andyrtr@archlinux.org>
 
 pkgbase=mesa-git
-pkgname=('vulkan-mesa-layers-git' 'opencl-mesa-git' 'vulkan-intel-git' 'vulkan-radeon-git' 'vulkan-swrast-git' 'vulkan-panfrost-git' 'vulkan-virtio-git' 'mesa-git')
+pkgname=('vulkan-mesa-layers-git'
+         'opencl-mesa-git'
+         'vulkan-intel-git'
+         'vulkan-nouveau-git'
+         'vulkan-radeon-git'
+         'vulkan-swrast-git'
+         'vulkan-panfrost-git'
+         'vulkan-virtio-git'
+         'mesa-git')
 pkgdesc="mesa trunk (git version)"
 epoch=1
-pkgver=23.3.0_devel.177588.738eb0d78cf
+pkgver=24.2.0_devel.188557.ea863c0c1cc
 pkgrel=1
 groups=('chaotic-mesa-git')
 arch=('x86_64')
@@ -16,16 +24,34 @@ makedepends=('python-mako' 'libxml2' 'libx11' 'libdrm' 'xorgproto' 'libxrandr' '
 	     'libxshmfence' 'libxxf86vm' 'libxdamage' 'libvdpau' 'libva' 'libxv'
              'polly-git' 'wayland' 'wayland-protocols' 'elfutils' 'llvm-git' 'llvm-libs-git' 'systemd' 'libsystemd'
 	     'libomxil-bellagio' 'libglvnd' 'libunwind' 'lm_sensors' 'libxvmc'
-             'libepoxy' 'gtk3' 'python-ply'
-             'meson' 'libclc-git' 'clang-git' 'glslang' 'zstd' 'vulkan-icd-loader' 'git' 'directx-headers')
+             'libepoxy' 'gtk3' 'python-ply' 'python-packaging' 'xcb-util-keysyms' 'cbindgen'
+             'meson' 'libclc-git' 'clang-git' 'glslang' 'zstd' 'vulkan-icd-loader' 'git' 'directx-headers-git')
 makedepends+=('rust-nightly' 'spirv-tools' 'rust-bindgen' 'spirv-llvm-translator-git')
 url="https://mesa3d.org"
-license=('custom')
+license=('MIT AND BSD-3-Clause AND SGI-B-2.0')
 source=('mesa::git+https://gitlab.freedesktop.org/mesa/mesa.git'
         'LICENSE')
 
+# Rust crates for NVK, used as Meson subprojects
+declare -A _crates=(
+   proc-macro2    1.0.70
+   quote          1.0.33
+   syn            2.0.39
+   unicode-ident  1.0.12
+   paste          1.0.14
+)
+
+for _crate in "${!_crates[@]}"; do
+  source+=($_crate-${_crates[$_crate]}.tar.gz::https://crates.io/api/v1/crates/$_crate/${_crates[$_crate]}/download)
+done
+
 sha256sums=('SKIP'
-            '7052ba73bb07ea78873a2431ee4e828f4e72bda7d176d07f770fa48373dec537')
+            '7052ba73bb07ea78873a2431ee4e828f4e72bda7d176d07f770fa48373dec537'
+            '39278fbbf5fb4f646ce651690877f89d1c5811a3d4acb27700c1cb3cdb78fd3b'
+            '3354b9ac3fae1ff6755cb6db53683adb661634f67557942dea4facebec0fee4b'
+            '5267fca4496028628a95160fc423a33e8b2e6af8a5302579e322e4b520293cae'
+            'de3145af08024dea9fa9914f381a17b8fc6034dfb00f3a84013f7ff43f29ed4c'
+            '23e78b90f2fcf45d3e842032ce32e3f2d1545ba6636271dcbf24fa306d87be7a')
 
 pkgver() {
   cd "$srcdir"/mesa
@@ -43,9 +69,12 @@ build() {
     -D cpp_std=c++17
     -D rust_std=2021
     -D b_ndebug=true
+    -D build-tests=true
+    -D enable-glcpp-tests=true
     -D platforms=x11,wayland
-    -D gallium-drivers=r300,r600,radeonsi,nouveau,iris,zink,virgl,svga,swrast,panfrost,lima,asahi,crocus,d3d12
-    -D vulkan-drivers=amd,intel,intel_hasvk,swrast,virtio,panfrost
+    -D egl-native-platform=auto
+    -D gallium-drivers=r300,r600,radeonsi,nouveau,iris,zink,virgl,svga,swrast,panfrost,lima,asahi,crocus,i915 #d3d12
+    -D vulkan-drivers=amd,intel,intel_hasvk,swrast,virtio,panfrost,nouveau
     -D vulkan-layers=device-select,intel-nullhw,overlay
     -D dri3=enabled
     -D egl=enabled
@@ -57,25 +86,39 @@ build() {
     -D gallium-va=enabled
     -D gallium-vdpau=enabled
     -D gallium-xa=enabled
+    -D gallium-d3d12-video=enabled
     -D android-libbacktrace=disabled
     -D gbm=enabled
     -D gles1=disabled
     -D gles2=enabled
     -D opencl-spirv=true
-    -D glvnd=true
+    -D spirv-to-dxil=true
+    -D draw-use-llvm=true
+    -D glvnd=enabled
     -D glx=dri
+    -D glx-direct=true
     -D libunwind=enabled
     -D llvm=enabled
+    -D allow-kcmp=enabled
     -D lmsensors=enabled
     -D osmesa=true
     -D shared-glapi=enabled
     -D microsoft-clc=disabled
     -D valgrind=enabled
+    -D intel-clc=enabled
+#    -D static-libclc=all
+    -D vulkan-beta=true
     -D zstd=enabled
     -D xlib-lease=enabled
-    -D intel-xe-kmd=enabled
-    -D video-codecs=h264dec,h264enc,h265enc,h265dec
+    -D shader-cache=enabled
+    -D shader-cache-max-size=8G
+    -D video-codecs=all
   )
+
+  CXXFLAGS+=" -fpermissive"
+
+ # Inject subproject packages
+  export MESON_PACKAGE_CACHE_DIR="$srcdir"
 
   arch-meson mesa build "${meson_options[@]}"
   # Print config
@@ -111,7 +154,7 @@ package_vulkan-mesa-layers-git() {
   _install fakeinstall/"$_libdir"/libVkLayer_*.so
   _install fakeinstall/usr/bin/mesa-overlay-control.py
 
-  install -m644 -Dt "$pkgdir/usr/share/licenses/$pkgname" LICENSE
+  install -Dm644 "$srcdir"/mesa/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
 }
 
 package_opencl-mesa-git() {
@@ -124,7 +167,7 @@ package_opencl-mesa-git() {
   _install fakeinstall/etc/OpenCL
   _install fakeinstall/"$_libdir"/lib*OpenCL*
 
-  install -m644 -Dt "$pkgdir/usr/share/licenses/$pkgname" LICENSE
+  install -Dm644 "$srcdir"/mesa/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
 }
 
 package_vulkan-intel-git() {
@@ -137,7 +180,34 @@ package_vulkan-intel-git() {
   _install fakeinstall/usr/share/vulkan/icd.d/intel_*.json
   _install fakeinstall/"$_libdir"/libvulkan_intel*.so
 
-  install -m644 -Dt "$pkgdir/usr/share/licenses/$pkgname" LICENSE
+  install -Dm644 "$srcdir"/mesa/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
+}
+
+package_vulkan-nouveau-git() {
+  pkgdesc="Open-source Vulkan driver for Nvidia GPUs"
+  depends=(
+    'expat'
+    'gcc-libs'
+    'glibc'
+    'libdrm'
+    'libx11'
+    'libxcb'
+    'libxshmfence'
+    'systemd-libs'
+    'vulkan-icd-loader'
+    'wayland'
+    'xcb-util-keysyms'
+    'zlib'
+    'zstd'
+  )
+  optdepends=('vulkan-mesa-layers: additional vulkan layers')
+  conflicts=('vulkan-nouveau')
+  provides=('vulkan-driver')
+
+  _install fakeinstall/usr/share/vulkan/icd.d/nouveau_*.json
+  _install fakeinstall/$_libdir/libvulkan_nouveau*.so
+
+  install -Dm644 "$srcdir"/mesa/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
 }
 
 package_vulkan-radeon-git() {
@@ -150,7 +220,7 @@ package_vulkan-radeon-git() {
   _install fakeinstall/usr/share/vulkan/icd.d/radeon_icd*.json
   _install fakeinstall/"$_libdir"/libvulkan_radeon.so
 
-  install -m644 -Dt "$pkgdir/usr/share/licenses/$pkgname" LICENSE
+  install -Dm644 "$srcdir"/mesa/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
 }
 
 package_vulkan-swrast-git() {
@@ -164,7 +234,7 @@ package_vulkan-swrast-git() {
   _install fakeinstall/usr/share/vulkan/icd.d/lvp_icd*.json
   _install fakeinstall/"$_libdir"/libvulkan_lvp.so
 
-  install -m644 -Dt "$pkgdir/usr/share/licenses/$pkgname" LICENSE
+  install -Dm644 "$srcdir"/mesa/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
 }
 
 package_vulkan-panfrost-git() {
@@ -177,7 +247,7 @@ package_vulkan-panfrost-git() {
   _install fakeinstall/usr/share/vulkan/icd.d/panfrost_*.json
   _install fakeinstall/usr/lib/libvulkan_panfrost*.so
 
-  install -m644 -Dt "$pkgdir/usr/share/licenses/$pkgname" LICENSE
+  install -Dm644 "$srcdir"/mesa/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
 }
 
 package_vulkan-virtio-git() {
@@ -197,13 +267,13 @@ depends=(
   _install fakeinstall/usr/share/vulkan/icd.d/virtio_icd*.json
   _install fakeinstall/$_libdir/libvulkan_virtio.so
 
-  install -m644 -Dt "${pkgdir}/usr/share/licenses/${pkgname}" LICENSE
+  install -m644 -Dt "${pkgdir}/usr/share/licenses/${pkgname}" "$srcdir"/mesa/docs/license.rst
 }
 
 package_mesa-git() {
   pkgdesc="an open-source implementation of the OpenGL specification (git version)"
   depends=('libdrm' 'wayland' 'libxxf86vm' 'libxdamage' 'libxshmfence' 'libsystemd' 'libelf'
-           'libomxil-bellagio' 'libunwind' 'llvm-libs-git' 'lm_sensors' 'libglvnd' 'libxv' 'libxvmc')
+           'libomxil-bellagio' 'libunwind' 'llvm-libs-git' 'llvm-git' 'lm_sensors' 'libglvnd' 'libxv' 'libxvmc')
   optdepends=('opengl-man-pages: for the OpenGL API man pages')
   provides=('mesa' 'mesa-vdpau' 'libva-mesa-driver' 'mesa-libgl' 'opengl-driver')
   conflicts=('mesa' 'mesa-vdpau' 'libva-mesa-driver' 'mesa-libgl')
@@ -238,8 +308,17 @@ package_mesa-git() {
   # indirect rendering
   ln -s /"$_libdir"/libGLX_mesa.so.0 "$pkgdir/"$_libdir"/libGLX_indirect.so.0"
 
+  # Spirv Dxil
+  _install fakeinstall/"$_libdir"/libspirv_to_dxil.so
+  _install fakeinstall/"$_libdir"/libspirv_to_dxil.a
+  _install fakeinstall/usr/bin/spirv2dxil
+
+  #tests
+  _install fakeinstall/usr/bin/mme_fermi_sim_hw_test
+  _install fakeinstall/usr/bin/mme_tu104_sim_hw_test
+
   # make sure there are no files left to install
   find fakeinstall -depth -print0 | xargs -0 rmdir
 
-  install -m644 -Dt "$pkgdir/usr/share/licenses/$pkgname" LICENSE
+  install -m644 -Dt "$pkgdir/usr/share/licenses/$pkgname" "$srcdir/mesa/docs/license.rst"
 }
